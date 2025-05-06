@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascase2.AccountService.Domain", "Xome.Cascase2.AccountService.Domain\Xome.Cascase2.AccountService.Domain.csproj", "{543B4C00-67DC-4D05-B239-BEEBB2BC80D8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascase2.AccountService.Application", "Xome.Cascase2.AccountService.Application\Xome.Cascase2.AccountService.Application.csproj", "{31D134AC-70A2-4EEC-AC27-C1CDB7F651F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascase2.AccountService.Infrastructure", "Xome.Cascase2.AccountService.Infrastructure\Xome.Cascase2.AccountService.Infrastructure.csproj", "{0FEECCB0-6F7E-49B3-936F-726A123B0F7A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascase2.AccountService.UnitTests", "Xome.Cascase2.AccountService.UnitTests\Xome.Cascase2.AccountService.UnitTests.csproj", "{A102141B-B9BC-4150-8544-FF6819E021A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascase2.AccountService.WebApi", "Xome.Cascase2.AccountService.WebApi\Xome.Cascase2.AccountService.WebApi.csproj", "{1A948E5F-A8EA-4AFB-9252-0B806CC937A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{543B4C00-67DC-4D05-B239-BEEBB2BC80D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{543B4C00-67DC-4D05-B239-BEEBB2BC80D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{543B4C00-67DC-4D05-B239-BEEBB2BC80D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{543B4C00-67DC-4D05-B239-BEEBB2BC80D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D134AC-70A2-4EEC-AC27-C1CDB7F651F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D134AC-70A2-4EEC-AC27-C1CDB7F651F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D134AC-70A2-4EEC-AC27-C1CDB7F651F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D134AC-70A2-4EEC-AC27-C1CDB7F651F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FEECCB0-6F7E-49B3-936F-726A123B0F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FEECCB0-6F7E-49B3-936F-726A123B0F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FEECCB0-6F7E-49B3-936F-726A123B0F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FEECCB0-6F7E-49B3-936F-726A123B0F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A102141B-B9BC-4150-8544-FF6819E021A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A102141B-B9BC-4150-8544-FF6819E021A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A102141B-B9BC-4150-8544-FF6819E021A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A102141B-B9BC-4150-8544-FF6819E021A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A948E5F-A8EA-4AFB-9252-0B806CC937A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A948E5F-A8EA-4AFB-9252-0B806CC937A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A948E5F-A8EA-4AFB-9252-0B806CC937A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A948E5F-A8EA-4AFB-9252-0B806CC937A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C08480B9-E5C7-47A7-A5C0-D8D6B203EFEC}
+	EndGlobalSection
+EndGlobal
