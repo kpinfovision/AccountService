@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascade2.AccountService.Domain", "Xome.Cascade2.AccountService.Domain\Xome.Cascade2.AccountService.Domain.csproj", "{5A73D5EB-4CAB-45EE-A3BC-5D2407BDE636}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascade2.AccountService.Application", "Xome.Cascade2.AccountService.Application\Xome.Cascade2.AccountService.Application.csproj", "{9DA6B7EF-F445-4F94-BDF9-2C8E08E91556}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascade2.AccountService.Infrastructure", "Xome.Cascade2.AccountService.Infrastructure\Xome.Cascade2.AccountService.Infrastructure.csproj", "{BACF3675-A20C-4BD7-B756-AC924BBDDD2B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascade2.AccountService.WebApi", "Xome.Cascade2.AccountService.WebApi\Xome.Cascade2.AccountService.WebApi.csproj", "{3BB42D29-2EE4-4565-B11B-37F09AC409FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xome.Cascade2.AccountService.UnitTests", "Xome.Cascade2.AccountService.UnitTests\Xome.Cascade2.AccountService.UnitTests.csproj", "{AB6AB34C-B271-44ED-AFB8-6879661D5621}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A73D5EB-4CAB-45EE-A3BC-5D2407BDE636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A73D5EB-4CAB-45EE-A3BC-5D2407BDE636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A73D5EB-4CAB-45EE-A3BC-5D2407BDE636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A73D5EB-4CAB-45EE-A3BC-5D2407BDE636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DA6B7EF-F445-4F94-BDF9-2C8E08E91556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA6B7EF-F445-4F94-BDF9-2C8E08E91556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DA6B7EF-F445-4F94-BDF9-2C8E08E91556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DA6B7EF-F445-4F94-BDF9-2C8E08E91556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BACF3675-A20C-4BD7-B756-AC924BBDDD2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACF3675-A20C-4BD7-B756-AC924BBDDD2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BACF3675-A20C-4BD7-B756-AC924BBDDD2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BACF3675-A20C-4BD7-B756-AC924BBDDD2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BB42D29-2EE4-4565-B11B-37F09AC409FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BB42D29-2EE4-4565-B11B-37F09AC409FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BB42D29-2EE4-4565-B11B-37F09AC409FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BB42D29-2EE4-4565-B11B-37F09AC409FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB6AB34C-B271-44ED-AFB8-6879661D5621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB6AB34C-B271-44ED-AFB8-6879661D5621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB6AB34C-B271-44ED-AFB8-6879661D5621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB6AB34C-B271-44ED-AFB8-6879661D5621}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C08480B9-E5C7-47A7-A5C0-D8D6B203EFEC}
+	EndGlobalSection
+EndGlobal
