@@ -15,26 +15,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
 
         public async Task AddCompany(Company company)
         {
-            bool isDuplicateCompanyName = await _context.IsDuplicateAsync<Company>("CompanyName", company.CompanyName);
-            bool isDuplicateLegalEntityName = await _context.IsDuplicateAsync<Company>("LegalEntityName", company.LegalEntityName);
-            bool isDuplicateTaxId = company.TaxID.Length > 0 ? await _context.IsDuplicateAsync<Company>("TaxID", company.TaxID) : false;
-
-            if (isDuplicateCompanyName)
-            {
-                Console.WriteLine("Duplicate Company Name");
-            }
-            if (isDuplicateLegalEntityName)
-            {
-                Console.WriteLine("Duplicate LegalEntityName ");
-            }
-            if (isDuplicateTaxId)
-            {
-                Console.WriteLine("Duplicate LegalEntityName ");
-            }
-            if (!isDuplicateCompanyName && !isDuplicateLegalEntityName && !isDuplicateTaxId)
-            {
-                await _context.Companies.AddAsync(company);
-            }
+            await _context.Companies.AddAsync(company);
         }
 
         public async Task DeleteCompany(int companyId)

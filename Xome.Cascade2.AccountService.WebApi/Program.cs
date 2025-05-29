@@ -7,6 +7,8 @@ using Xome.Cascade2.AccountService.Infrastructure.Data;
 using Xome.Cascade2.AccountService.WebApi.Config;
 using Xome.Cascade2.AccountService.WebApi.Middlewares;
 using Azure.Messaging.ServiceBus;
+using Xome.Cascade2.AccountService.Domain.Interfaces;
+using Xome.Cascade2.AccountService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
