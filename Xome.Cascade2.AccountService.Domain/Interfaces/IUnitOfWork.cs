@@ -6,7 +6,6 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
     {
         IUserRepository Users { get; }
         IAssetRepository Assets { get; }
-        ICompanyRepository Companies { get; }
         IValuationTypeRepository valuationTypes { get; }
         ILoadValuationRepository LoadValuations { get; }
         ISellerConfigRepository SellerConfig { get; }

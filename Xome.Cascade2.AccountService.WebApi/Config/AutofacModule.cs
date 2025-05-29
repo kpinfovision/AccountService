@@ -13,7 +13,6 @@ namespace Xome.Cascade2.AccountService.WebApi.Config
         {
             builder.RegisterLazy<IUserRepository, UserRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<IAssetRepository, AssetRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<ICompanyRepository, CompanyRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<IValuationTypeRepository, ValuationTypeRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<ILoadValuationRepository, LoadValuationRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<ISellerConfigRepository, SellerConfigRepository>().InstancePerLifetimeScope();
