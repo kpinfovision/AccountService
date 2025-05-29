@@ -7,7 +7,7 @@ using Xome.Cascade2.AccountService.Infrastructure.UnitOfWork;
 
 namespace Xome.Cascade2.AccountService.WebApi.Config
 {
-    public class AutofacModule: Autofac.Module
+    public class AutofacModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -18,7 +18,11 @@ namespace Xome.Cascade2.AccountService.WebApi.Config
             builder.RegisterLazy<ILoadValuationRepository, LoadValuationRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<ISellerConfigRepository, SellerConfigRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<IUnitOfWork, UnitOfWork>().InstancePerLifetimeScope();
-            // builder.RegisterLazy<IUserService, UserService>().InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EntityRepository<>))
+                                .As(typeof(IEntityRepository<>))
+                                .InstancePerLifetimeScope();
+            // builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IEntityRepository<>)).InstancePerLifetimeScope();
+            // builder.RegisterLazy(typeof(EntityRepository<>)).As(typeof(IEntityRepository<>)).InstancePerLifetimeScope();
 
             base.Load(builder);
         }

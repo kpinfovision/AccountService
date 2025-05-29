@@ -1,38 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using Xome.Cascade2.AccountService.Domain.Entities;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
+using Xome.Cascade2.AccountService.Infrastructure.Data;
 
 namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
 {
     public class CompanyRepository : ICompanyRepository
     {
-        public Task AddCompany(Company company)
+        private readonly AppDbContext _context;
+        public CompanyRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task DeleteCompany(int companyId)
+        public async Task AddCompany(Company company)
         {
-            throw new NotImplementedException();
+            await _context.Companies.AddAsync(company);
         }
 
-        public Task<IEnumerable<Company>> GetAllCompany()
+        public async Task DeleteCompany(int companyId)
         {
-            throw new NotImplementedException();
+            var company = await _context.Companies.FindAsync(companyId);
+            if (company != null)
+            {
+                _context.Companies.Remove(company);
+            }
         }
 
-        public Task<Company> GetCompanyById(int companyId)
+        public async Task<IEnumerable<Company>> GetAllCompany()
         {
-            throw new NotImplementedException();
+            return await _context.Companies.ToArrayAsync();
         }
 
-        public Task UpdateCompany(Company company)
+        public async Task<Company> GetCompanyById(int companyId)
         {
-            throw new NotImplementedException();
+            var company = _context.Companies.FirstOrDefault(a => a.CompanyId == companyId) ?? new Company();
+            return company;
+        }
+
+        public async Task UpdateCompany(Company company)
+        {
+            _context.Companies.Update(company);
         }
     }
 }

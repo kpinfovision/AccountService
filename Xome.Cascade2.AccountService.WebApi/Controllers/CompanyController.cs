@@ -1,7 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
+using System.Xml;
 using Xome.Cascade2.AccountService.Application.Services;
 using Xome.Cascade2.AccountService.Domain.Entities;
+using Xome.Cascade2.AccountService.Domain.Interfaces;
+using Xome.Cascade2.AccountService.Infrastructure.Repositories;
 
 namespace Xome.Cascade2.AccountService.WebApi.Controllers
 {
@@ -10,9 +16,11 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
     public class CompanyController : ControllerBase
     {
         public readonly CompanyService _companyService;
-        public CompanyController(CompanyService companyService)
+        // private readonly IEntityRepository<Company> _entityRepository;
+        public CompanyController(CompanyService companyService, IEntityRepository<Company> entityRepository)
         {
             _companyService = companyService;
+            // _entityRepository = entityRepository;
         }
         [HttpGet]
         public async Task<IEnumerable<Company>> GetAllCompany()
@@ -29,6 +37,22 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
         [HttpPost]
         public async Task<Company> AddCompany(Company company)
         {
+            //bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
+            //bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
+            //bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
+
+            //if (isDuplicateCompanyName)
+            //{
+            //    Console.WriteLine("Duplicate Company Name");
+            //}
+            //if (isDuplicateLegalEntityName)
+            //{
+            //    Console.WriteLine("Duplicate LegalEntityName ");
+            //}
+            //if (isDuplicateTaxId)
+            //{
+            //    Console.WriteLine("Duplicate LegalEntityName ");
+            //}
             await _companyService.AddCompany(company);
             return company;
         }

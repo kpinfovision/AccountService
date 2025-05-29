@@ -28,8 +28,8 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public int TaxIDType { get; set; }
         public int State { get; set; }
         public int[] StateServed { get; set; }
-        public int Fax { get; set; }
-        public int TaxID { get; set; }
+        public string Fax { get; set; }
+        public string TaxID { get; set; }
         public string Zip { get; set; }
         public string Notes { get; set; }
         public string LegalEntityName { get; set; }
