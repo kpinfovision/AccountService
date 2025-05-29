@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using Xome.Cascade2.AccountService.Domain.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
@@ -6,7 +7,6 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
-
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
 
@@ -52,6 +52,22 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
             modelBuilder.Entity<SellerConfig>().HasData(
                 new SellerConfig { Id = 1, ConfigName = "FundsTracking", Status = true}
             );
+        }
+    }
+
+    public static class DbContextExtensions
+    {
+        public static async Task<bool> IsDuplicateAsync<T>(this DbContext context, string propertyName, object value) where T : class
+        {
+            var dbSet = context.Set<T>();
+
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var constant = Expression.Constant(value);
+            var equalsExpression = Expression.Equal(property, constant);
+            var lambda = Expression.Lambda<Func<T, bool>>(equalsExpression, parameter);
+
+            return await dbSet.AnyAsync(lambda);
         }
     }
 }
