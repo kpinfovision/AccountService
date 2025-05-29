@@ -11,6 +11,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public DbSet<User> Users { get; set; }
 
         public DbSet<Asset> Assets { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
         public DbSet<ValuationType> ValuationTypes { get; set; }
 
@@ -52,7 +53,5 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
                 new SellerConfig { Id = 1, ConfigName = "FundsTracking", Status = true}
             );
         }
-
-
     }
 }
