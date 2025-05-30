@@ -10,7 +10,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<Company> Companies { get; set; }        
 
         public DbSet<ValuationType> ValuationTypes { get; set; }
 
@@ -24,10 +24,12 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
 
         public DbSet<SellerConfig> sellerConfigs => Set<SellerConfig>();
 
+        public DbSet<Feature> Features { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);            
+
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 1, FirstName = "Sujata", LastName = "Telang", Email = "sujata.telang@infovision.com", Role = "Asset Manager" },
                 new User { Id = 2, FirstName = "Kiran", LastName = "Patwardhan", Email = "kiran.patwardhan@infovision.com", Role = "Auction Manager" },
@@ -50,6 +52,14 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
             );
             modelBuilder.Entity<SellerConfig>().HasData(
                 new SellerConfig { Id = 1, ConfigName = "FundsTracking", Status = true}
+            );
+            modelBuilder.Entity<Feature>().HasData(
+                new Feature { FeatureId = 1, FeatureName = "Dashboard",  Order = 1, IsActive = true, IsVisible = true },
+                new Feature { FeatureId = 2, FeatureName = "My Tasks",  Order = 2, IsActive = true, IsVisible = true },
+                new Feature { FeatureId = 3, FeatureName = "Assets",  Order = 3, IsActive = true, IsVisible = true },
+                new Feature { FeatureId = 4, FeatureName = "Users",  Order = 4, IsActive = true, IsVisible = true },
+                new Feature { FeatureId = 5, FeatureName = "Comapnies",  Order = 5, IsActive = true, IsVisible = true },
+                new Feature { FeatureId = 6, FeatureName = "Support",  Order = 5, IsActive = true, IsVisible = true }
             );
         }
     }
