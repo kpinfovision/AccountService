@@ -14,5 +14,6 @@ namespace Xome.Cascade2.AccountService.Application.Services
         Task AddCompany(Company company);
         Task UpdateCompany(Company company);
         Task DeleteCompany(int companyId);
+        Task BulkInsertCompany(IEnumerable<Company> company);
     }
 }

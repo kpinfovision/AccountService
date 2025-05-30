@@ -18,6 +18,11 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
             await _context.Companies.AddAsync(company);
         }
 
+        public async Task BulkInsertCompany(IEnumerable<Company> companies)
+        {
+            await _context.Companies.AddRangeAsync(companies);
+        }
+
         public async Task DeleteCompany(int companyId)
         {
             var company = await _context.Companies.FindAsync(companyId);

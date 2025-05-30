@@ -37,23 +37,10 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
         [HttpPost]
         public async Task<Company> AddCompany(Company company)
         {
-            //bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
-            //bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
-            //bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
-
-            //if (isDuplicateCompanyName)
-            //{
-            //    Console.WriteLine("Duplicate Company Name");
-            //}
-            //if (isDuplicateLegalEntityName)
-            //{
-            //    Console.WriteLine("Duplicate LegalEntityName ");
-            //}
-            //if (isDuplicateTaxId)
-            //{
-            //    Console.WriteLine("Duplicate LegalEntityName ");
-            //}
-            await _companyService.AddCompany(company);
+            // await _companyService.AddCompany(company);
+            List<Company> companies = new List<Company>();
+            companies.Add(company);
+            await _companyService.BulkInsertCompany(companies);
             return company;
         }
 
