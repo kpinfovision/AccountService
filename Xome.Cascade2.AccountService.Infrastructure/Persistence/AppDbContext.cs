@@ -26,6 +26,9 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
 
         public DbSet<Feature> Features { get; set; }
 
+        public DbSet<RemovedReason> RemovedReason { get; set; }
+        public DbSet<Services> Services { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);            
@@ -61,6 +64,14 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
                 new Feature { FeatureId = 5, FeatureName = "Comapnies",  Order = 5, IsActive = true, IsVisible = true },
                 new Feature { FeatureId = 6, FeatureName = "Support",  Order = 5, IsActive = true, IsVisible = true }
             );
+            modelBuilder.Entity<Services>(eb => {
+                eb.HasNoKey();               
+            });
+
+            //modelBuilder.Entity<RemovedReason>().HasData(
+            //    new RemovedReason { RemovedReasonId = 1, RemovedReasonName = "InActive"} );
+            //modelBuilder.Entity<Services>().HasData(
+            //    new Services { StateId = 1, StateName = "ForeClouser", StateCode = "1001"});
         }
     }
 }

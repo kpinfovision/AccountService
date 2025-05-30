@@ -13,6 +13,9 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public IValuationTypeRepository valuationTypes { get; }
         public ILoadValuationRepository LoadValuations { get; }
         public ISellerConfigRepository SellerConfig { get; }
+        public ILookupRepository Lookup { get; }
+
+
         public UnitOfWork(
             AppDbContext context,
             IUserRepository userRepository,
@@ -21,7 +24,8 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             IValuationTypeRepository valuationTypesRepository,
             ISellerConfigRepository sellerConfigRepository,
             ICompanyRepository companyRepository,
-            IFeatureRepository featureRepository
+            IFeatureRepository featureRepository,
+            ILookupRepository lookup
             )
         {
             _context = context;
@@ -32,6 +36,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             SellerConfig = sellerConfigRepository;
             Companies = companyRepository;
             Features = featureRepository;
+            Lookup = lookup;
         }
         public void Dispose()
         {
