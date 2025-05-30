@@ -29,6 +29,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CamundaService>();
 builder.Services.AddScoped<AssetService>();
 builder.Services.AddScoped<CompanyService>();
+builder.Services.AddScoped<FeatureService>();
 builder.Services.AddScoped<ValuationTypeService>();
 builder.Services.AddScoped<LoadValuationService>();
 builder.Services.AddScoped<SellerConfigService>();
