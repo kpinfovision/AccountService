@@ -12,9 +12,7 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
 
         Task<List<ManualTask>> GetAllCamundaTasks();
         Task<List<TaskFields>> GetAllCamundaTaskFields();
-
         Task<List<UserTaskFieldMapping>> GetUserTaskFieldMappings();
-
 
     }
 }

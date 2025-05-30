@@ -33,9 +33,12 @@ builder.Services.AddScoped<FeatureService>();
 builder.Services.AddScoped<ValuationTypeService>();
 builder.Services.AddScoped<LoadValuationService>();
 builder.Services.AddScoped<SellerConfigService>();
+builder.Services.AddScoped<LookupService>();
 builder.Services.AddScoped<ServiceBusPublisher>();
 builder.Services.AddScoped<StateService>();
 builder.Services.AddScoped<CompanyTypeService>();
+builder.Services.AddScoped<ILookupRepository, LookupRepository>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

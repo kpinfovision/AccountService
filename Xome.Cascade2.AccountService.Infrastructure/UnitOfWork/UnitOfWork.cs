@@ -15,6 +15,9 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public ISellerConfigRepository SellerConfig { get; }
         public IStateRepository States { get; }
         public ICompanyTypeRepository CompanyTypes { get; }
+        public ILookupRepository Lookup { get; }
+
+
         public UnitOfWork(
             AppDbContext context,
             IUserRepository userRepository,
@@ -24,8 +27,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             ISellerConfigRepository sellerConfigRepository,
             ICompanyRepository companyRepository,
             IFeatureRepository featureRepository,
-            IStateRepository stateRepository,
-            ICompanyTypeRepository companyTypeRepository
+            ILookupRepository lookup
             )
         {
             _context = context;
@@ -36,8 +38,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             SellerConfig = sellerConfigRepository;
             Companies = companyRepository;
             Features = featureRepository;
-            States = stateRepository;
-            CompanyTypes = companyTypeRepository;
+            Lookup = lookup;
         }
         public void Dispose()
         {
