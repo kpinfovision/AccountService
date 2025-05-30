@@ -13,6 +13,8 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public IValuationTypeRepository valuationTypes { get; }
         public ILoadValuationRepository LoadValuations { get; }
         public ISellerConfigRepository SellerConfig { get; }
+        public IStateRepository States { get; }
+        public ICompanyTypeRepository CompanyTypes { get; }
         public ILookupRepository Lookup { get; }
 
 

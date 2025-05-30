@@ -25,6 +25,8 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public DbSet<SellerConfig> sellerConfigs => Set<SellerConfig>();
 
         public DbSet<Feature> Features { get; set; }
+        public DbSet<CompanyTypes> CompanyTypes { get; set; }
+        public DbSet<States> States { get; set; }
 
         public DbSet<RemovedReason> RemovedReason { get; set; }
         public DbSet<Services> Services { get; set; }
@@ -68,10 +70,13 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
                 eb.HasNoKey();               
             });
 
-            //modelBuilder.Entity<RemovedReason>().HasData(
-            //    new RemovedReason { RemovedReasonId = 1, RemovedReasonName = "InActive"} );
-            //modelBuilder.Entity<Services>().HasData(
-            //    new Services { StateId = 1, StateName = "ForeClouser", StateCode = "1001"});
+           
+            modelBuilder.Entity<CompanyTypes>().HasData(
+                new CompanyTypes {Id = 1, companyTypeId = 1, companyTypeName = "XOME" }
+            );
+            modelBuilder.Entity<States>().HasData(
+                new States {Id = 1, stateId = 1, stateName = "Andhra Pradesh", StateCode = "AP" }
+            );
         }
     }
 }
