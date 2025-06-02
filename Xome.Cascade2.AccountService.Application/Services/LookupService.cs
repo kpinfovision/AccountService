@@ -17,6 +17,21 @@ namespace Xome.Cascade2.AccountService.Application.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<dynamic> GetLookupData()
+        {
+            var removedReasons = await this.GetRemovedReasonAsync();
+            var services = await this.GetServicesAsync();
+            var companyTypes = await this.GetAllCompanyTypes();
+            var states = await this.GetAllStates();
+            return new
+            {
+                removedReasons = removedReasons,
+                services = services,
+                companyTypes = companyTypes,
+                states = states,
+            };
+        }
+
         public async Task<IEnumerable<RemovedReason>> GetRemovedReasonAsync()
         {
             return await _unitOfWork.Lookup.GetRemovedReasonAsync();
@@ -27,6 +42,24 @@ namespace Xome.Cascade2.AccountService.Application.Services
             return await _unitOfWork.Lookup.GetServicesAsync();
         }
 
+        public async Task<IEnumerable<CompanyTypes>> GetAllCompanyTypes()
+        {
+            return await _unitOfWork.Lookup.GetAllCompanyTypes();
+        }
 
+        public async Task<IEnumerable<Feature>> GetFeatures()
+        {
+            return await _unitOfWork.Features.GetAllFeatures();
+        }
+
+        public async Task<Feature> GetFeatureByUserId(int userId)
+        {
+            return await _unitOfWork.Features.GetFeatureByUserId(userId);
+        }
+
+        public async Task<IEnumerable<States>> GetAllStates()
+        {
+            return await _unitOfWork.Lookup.GetAllStates();
+        }
     }
 }

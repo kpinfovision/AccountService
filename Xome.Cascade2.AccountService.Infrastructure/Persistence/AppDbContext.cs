@@ -72,7 +72,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
 
            
             modelBuilder.Entity<CompanyTypes>().HasData(
-                new CompanyTypes {Id = 1, companyTypeId = 1, companyTypeName = "XOME" }
+                new CompanyTypes {Id = 1, CompanyTypeId = 1, CompanyTypeName = "XOME" }
             );
             modelBuilder.Entity<States>().HasData(
                 new States {Id = 1, stateId = 1, stateName = "Andhra Pradesh", StateCode = "AP" }

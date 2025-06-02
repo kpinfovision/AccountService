@@ -11,5 +11,6 @@ namespace Xome.Cascade2.AccountService.Application.Services
     {
         Task<IEnumerable<RemovedReason>> GetRemovedReasonAsync();
         Task<IEnumerable<Xome.Cascade2.AccountService.Domain.Entities.Services>> GetServicesAsync();
+        Task<dynamic> GetLookupData();
     }
 }
