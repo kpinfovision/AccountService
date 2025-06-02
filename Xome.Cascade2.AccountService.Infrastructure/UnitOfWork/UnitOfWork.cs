@@ -13,6 +13,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public ICompanyStatesServedRepository CompanyStatesServed { get; }
         public IFeatureRepository Features { get; }
         public ITaxIDTypesRepository TaxIDTypes { get; }
+        public IAddressRepository Address { get; }
         public IValuationTypeRepository valuationTypes { get; }
         public ILoadValuationRepository LoadValuations { get; }
         public ISellerConfigRepository SellerConfig { get; }
@@ -30,7 +31,8 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             IFeatureRepository featureRepository,
             ILookupRepository lookup,
             ICompanyStatesServedRepository companyStatesServedRepository,
-            ITaxIDTypesRepository taxIDTypesRepository
+            ITaxIDTypesRepository taxIDTypesRepository,
+            IAddressRepository addressRepository
             )
         {
             _context = context;
@@ -44,6 +46,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             Lookup = lookup;
             CompanyStatesServed = companyStatesServedRepository;
             TaxIDTypes = taxIDTypesRepository;
+            Address = addressRepository;
         }
         public void Dispose()
         {
