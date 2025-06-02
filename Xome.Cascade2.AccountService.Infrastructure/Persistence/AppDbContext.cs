@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.Design;
 using System.Linq.Expressions;
 using Xome.Cascade2.AccountService.Domain.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
@@ -11,6 +12,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Address> Address { get; set; }
         public DbSet<CompanyStatesServed> companyStatesServed { get; set; }
 
         public DbSet<ValuationType> ValuationTypes { get; set; }
@@ -70,8 +72,8 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
                 new CompanyTypes {Id = 1, CompanyTypeId = 1, CompanyTypeName = "XOME" }
             );
             modelBuilder.Entity<States>().HasData(
-                new States {Id = 1, stateId = 1, stateName = "Andhra Pradesh", StateCode = "AP" }
-            );
+                new States {Id = 1, stateId = 1, stateName = "New York", StateCode = "NY" }
+            );            
         }
     }
 }
