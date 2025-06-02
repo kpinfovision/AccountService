@@ -3,7 +3,7 @@
     public class CompanyTypes
     {
         public int Id { get; set; }
-        public int companyTypeId { get; set; }
-        public string companyTypeName { get; set; }
+        public int CompanyTypeId { get; set; }
+        public string CompanyTypeName { get; set; }
     }
 }

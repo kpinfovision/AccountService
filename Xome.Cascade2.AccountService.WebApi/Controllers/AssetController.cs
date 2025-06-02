@@ -9,13 +9,11 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
     public class AssetController : ControllerBase
     {
         public readonly AssetService _assetService;
-        public readonly StateService _stateService;
-        public readonly CompanyTypeService _companyTypeService;
-        public AssetController(AssetService assetService, StateService stateService, CompanyTypeService companyTypeService)
+
+
+        public AssetController(AssetService assetService)
         {
             _assetService = assetService;
-            _stateService = stateService;
-            _companyTypeService = companyTypeService;
         }
         [HttpGet]
         public async Task<IEnumerable<Asset>> GetAllAssets()
@@ -61,16 +59,5 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
             await _assetService.TriggerExternalSystemEvent(assetId, eventName);
         }
 
-        [HttpGet("States")]
-        public async Task<IEnumerable<States>> GetAllStates()
-        {
-            return await _stateService.GetAllStates();
-        }
-
-        [HttpGet("CompanyTypes")]
-        public async Task<IEnumerable<CompanyTypes>> GetAllCompanyTypes()
-        {
-            return await _companyTypeService.GetAllCompanyTypes();
-        }
     }
 }
