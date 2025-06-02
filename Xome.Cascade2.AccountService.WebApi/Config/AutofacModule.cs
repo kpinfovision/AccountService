@@ -14,6 +14,7 @@ namespace Xome.Cascade2.AccountService.WebApi.Config
             builder.RegisterLazy<IUserRepository, UserRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<IAssetRepository, AssetRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<ICompanyRepository, CompanyRepository>().InstancePerLifetimeScope();
+            builder.RegisterLazy<ICompanyStatesServedRepository, CompanyStatesServedRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<IFeatureRepository, FeatureRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<ITaxIDTypesRepository, TaxIDTypesRepository>().InstancePerLifetimeScope();
             builder.RegisterLazy<IValuationTypeRepository, ValuationTypeRepository>().InstancePerLifetimeScope();
@@ -23,8 +24,6 @@ namespace Xome.Cascade2.AccountService.WebApi.Config
             builder.RegisterGeneric(typeof(EntityRepository<>))
                                 .As(typeof(IEntityRepository<>))
                                 .InstancePerLifetimeScope();
-            // builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IEntityRepository<>)).InstancePerLifetimeScope();
-            // builder.RegisterLazy(typeof(EntityRepository<>)).As(typeof(IEntityRepository<>)).InstancePerLifetimeScope();
 
             base.Load(builder);
         }

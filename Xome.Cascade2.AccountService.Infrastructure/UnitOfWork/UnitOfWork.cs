@@ -1,4 +1,5 @@
-﻿using Xome.Cascade2.AccountService.Domain.Interfaces;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using Xome.Cascade2.AccountService.Domain.Interfaces;
 using Xome.Cascade2.AccountService.Infrastructure.Data;
 
 namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
@@ -9,6 +10,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public IUserRepository Users { get; }
         public IAssetRepository Assets { get; }
         public ICompanyRepository Companies { get; }
+        public ICompanyStatesServedRepository CompanyStatesServed { get; }
         public IFeatureRepository Features { get; }
         public ITaxIDTypesRepository TaxIDTypes { get; }
         public IValuationTypeRepository valuationTypes { get; }
@@ -27,6 +29,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             ICompanyRepository companyRepository,
             IFeatureRepository featureRepository,
             ILookupRepository lookup,
+            ICompanyStatesServedRepository companyStatesServedRepository
             ITaxIDTypesRepository taxIDTypesRepository
             )
         {
@@ -39,6 +42,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             Companies = companyRepository;
             Features = featureRepository;
             Lookup = lookup;
+            CompanyStatesServed = companyStatesServedRepository;
             TaxIDTypes = taxIDTypesRepository;
         }
         public void Dispose()
@@ -49,6 +53,14 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            if (_context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                return null; // No transaction for in-memory
+            }
+            return await _context.Database.BeginTransactionAsync();
         }
     }
 }

@@ -23,9 +23,9 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
             // _entityRepository = entityRepository;
         }
         [HttpGet]
-        public async Task<IEnumerable<Company>> GetAllCompany()
+        public async Task<IEnumerable<Company>> GetCompanies()
         {
-            return await _companyService.GetAllCompany();
+            return await _companyService.GetCompanies();
         }
 
         [HttpGet("{companyId}")]
@@ -40,7 +40,7 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
             // await _companyService.AddCompany(company);
             List<Company> companies = new List<Company>();
             companies.Add(company);
-            await _companyService.BulkInsertCompany(companies);
+            await _companyService.BulkInsertCompanyAsync(companies, false);
             return company;
         }
 

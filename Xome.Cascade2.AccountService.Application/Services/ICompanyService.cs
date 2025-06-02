@@ -9,7 +9,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
 {
     public interface ICompanyService
     {
-        Task<IEnumerable<Company>> GetAllCompany();
+        Task<IEnumerable<Company>> GetCompanies();
         Task<Company> GetCompanyById(int companyId);
         Task AddCompany(Company company);
         Task UpdateCompany(Company company);
