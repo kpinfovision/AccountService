@@ -9,11 +9,19 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
 {
     public interface ICompanyRepository
     {
-        Task<IEnumerable<Company>> GetAllCompany();
+        Task<IEnumerable<Company>> GetCompanies();
         Task<Company> GetCompanyById(int companyId);
         Task AddCompany(Company company);
         Task UpdateCompany(Company company);
         Task DeleteCompany(int companyId);
         Task BulkInsertCompany(IEnumerable<Company> company);
+    }
+    public interface ICompanyStatesServedRepository
+    {
+        Task<IEnumerable<CompanyStatesServed>> GetCompanyStatesServed();
+        Task<CompanyStatesServed> GetCompanyStatesServedById(int companyId);
+        Task AddCompanyStatesServed(CompanyStatesServed companyStatesServed);
+        Task DeleteCompanyStatesServed(int companyId);
+        Task BulkInsertCompanyStatesServed(IEnumerable<CompanyStatesServed> companyStatesServed);
     }
 }

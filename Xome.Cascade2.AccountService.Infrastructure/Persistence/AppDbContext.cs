@@ -10,7 +10,8 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
-        public DbSet<Company> Companies { get; set; }        
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<CompanyStatesServed> companyStatesServed { get; set; }
 
         public DbSet<ValuationType> ValuationTypes { get; set; }
 

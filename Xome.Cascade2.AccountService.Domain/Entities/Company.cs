@@ -36,4 +36,10 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public string DisplayName { get; set; }
         public string Abbreviation { get; set; }
     }
+
+    public class CompanyStatesServed
+    {
+        public int CompanyId { get; set; }
+        public int StateId { get; set; }
+    }
 }

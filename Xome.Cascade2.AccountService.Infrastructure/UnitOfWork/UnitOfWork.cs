@@ -1,4 +1,5 @@
-﻿using Xome.Cascade2.AccountService.Domain.Interfaces;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using Xome.Cascade2.AccountService.Domain.Interfaces;
 using Xome.Cascade2.AccountService.Infrastructure.Data;
 
 namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
@@ -9,6 +10,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public IUserRepository Users { get; }
         public IAssetRepository Assets { get; }
         public ICompanyRepository Companies { get; }
+        public ICompanyStatesServedRepository CompanyStatesServed { get; }
         public IFeatureRepository Features { get; }
         public IValuationTypeRepository valuationTypes { get; }
         public ILoadValuationRepository LoadValuations { get; }
@@ -25,7 +27,8 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             ISellerConfigRepository sellerConfigRepository,
             ICompanyRepository companyRepository,
             IFeatureRepository featureRepository,
-            ILookupRepository lookup
+            ILookupRepository lookup,
+            ICompanyStatesServedRepository companyStatesServedRepository
             )
         {
             _context = context;
@@ -37,6 +40,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             Companies = companyRepository;
             Features = featureRepository;
             Lookup = lookup;
+            CompanyStatesServed = companyStatesServedRepository;
         }
         public void Dispose()
         {
@@ -46,6 +50,10 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
     }
 }
