@@ -21,7 +21,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
         {
             var removedReasons = await this.GetRemovedReasonAsync();
             var services = await this.GetServicesAsync();
-            var companyTypes = await this.GetAllCompanyTypes();
+            var companyTypes = await this.GetCompaniesTypes();
             var states = await this.GetAllStates();
             return new
             {
@@ -42,9 +42,9 @@ namespace Xome.Cascade2.AccountService.Application.Services
             return await _unitOfWork.Lookup.GetServicesAsync();
         }
 
-        public async Task<IEnumerable<CompanyTypes>> GetAllCompanyTypes()
+        public async Task<IEnumerable<CompanyTypes>> GetCompaniesTypes()
         {
-            return await _unitOfWork.Lookup.GetAllCompanyTypes();
+            return await _unitOfWork.Lookup.GetCompaniesTypes();
         }
 
         public async Task<IEnumerable<Feature>> GetFeatures()

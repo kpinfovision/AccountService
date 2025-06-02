@@ -29,7 +29,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
             return await _context.Services.ToListAsync();
         }
 
-        public async Task<IEnumerable<CompanyTypes>> GetAllCompanyTypes()
+        public async Task<IEnumerable<CompanyTypes>> GetCompaniesTypes()
         {
             return await _context.CompanyTypes.ToArrayAsync();
         }

@@ -11,7 +11,7 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
     {
         Task <IEnumerable<RemovedReason>> GetRemovedReasonAsync();
         Task<IEnumerable<Services>> GetServicesAsync();
-        Task<IEnumerable<CompanyTypes>> GetAllCompanyTypes();
+        Task<IEnumerable<CompanyTypes>> GetCompaniesTypes();
         Task<IEnumerable<States>> GetAllStates();
     }
 }
