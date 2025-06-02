@@ -26,6 +26,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public DbSet<SellerConfig> sellerConfigs => Set<SellerConfig>();
 
         public DbSet<Feature> Features { get; set; }
+        public DbSet<TaxIDTypes> TaxIDTypes { get; set; }
         public DbSet<CompanyTypes> CompanyTypes { get; set; }
         public DbSet<States> States { get; set; }
 
@@ -66,6 +67,11 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
                 new Feature { FeatureId = 4, FeatureName = "Users",  Order = 4, IsActive = true, IsVisible = true },
                 new Feature { FeatureId = 5, FeatureName = "Comapnies",  Order = 5, IsActive = true, IsVisible = true },
                 new Feature { FeatureId = 6, FeatureName = "Support",  Order = 5, IsActive = true, IsVisible = true }
+            );
+            modelBuilder.Entity<TaxIDTypes>().HasData(
+                new TaxIDTypes { Id = 1, TaxIDTypeId = 1, TaxIDTypeName = "Type1" },
+                new TaxIDTypes { Id = 2, TaxIDTypeId = 2, TaxIDTypeName = "Type2" },
+                new TaxIDTypes { Id = 3, TaxIDTypeId = 3, TaxIDTypeName = "Type3" }
             );
             modelBuilder.Entity<Services>(eb => {
                 eb.HasNoKey();               
