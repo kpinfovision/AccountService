@@ -1,27 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Xome.Cascade2.AccountService.Domain.Entities
 {
+    [Table("FEATURE")]
     public class Feature
     {
-        /// <summary>
-        /// Left Side Navigation Main Menu
-        /// </summary>
+        [Column("FEATURE_KEY")]
         public int FeatureId { get; set; }
 
-        // Display name of the menu item
-        public string FeatureName { get; set; }
+        [Column("FEATURE_NAME")]
+        [Required]
+        [MaxLength(50)]
+        public string FeatureName { get; set; } = null!;
 
-        // ordering / sorting items
-        public int Order { get; set; }
+        [Column("ACTIVE")]
+        public bool IsActive { get; set; }
 
-        // Flag for active/inactive menu items
-        public bool IsActive { get; set; } = true;
+        [Column("CREATED_ON")]
+        public DateTime CreatedOn { get; set; }
 
-        public bool IsVisible { get; set; } = true;
+        [Column("CREATED_BY")]
+        public int CreatedBy { get; set; }
+
+        [Column("MODIFIED_ON")]
+        public DateTime? ModifiedOn { get; set; }
+
+        [Column("MODIFIED_BY")]
+        public int? ModifiedBy { get; set; }
     }
 }

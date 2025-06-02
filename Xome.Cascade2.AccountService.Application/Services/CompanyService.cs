@@ -90,6 +90,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         CompanyId = company.CompanyId,
                         StateId = stateId
                     }));
+                    
                 }
 
                 if (companyStates.Any())
