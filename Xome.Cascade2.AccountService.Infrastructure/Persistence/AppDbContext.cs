@@ -25,6 +25,11 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public DbSet<SellerConfig> sellerConfigs => Set<SellerConfig>();
 
         public DbSet<Feature> Features { get; set; }
+        public DbSet<CompanyTypes> CompanyTypes { get; set; }
+        public DbSet<States> States { get; set; }
+
+        public DbSet<RemovedReason> RemovedReason { get; set; }
+        public DbSet<Services> Services { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +65,17 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
                 new Feature { FeatureId = 4, FeatureName = "Users",  Order = 4, IsActive = true, IsVisible = true },
                 new Feature { FeatureId = 5, FeatureName = "Comapnies",  Order = 5, IsActive = true, IsVisible = true },
                 new Feature { FeatureId = 6, FeatureName = "Support",  Order = 5, IsActive = true, IsVisible = true }
+            );
+            modelBuilder.Entity<Services>(eb => {
+                eb.HasNoKey();               
+            });
+
+           
+            modelBuilder.Entity<CompanyTypes>().HasData(
+                new CompanyTypes {Id = 1, CompanyTypeId = 1, CompanyTypeName = "XOME" }
+            );
+            modelBuilder.Entity<States>().HasData(
+                new States {Id = 1, stateId = 1, stateName = "Andhra Pradesh", StateCode = "AP" }
             );
         }
     }

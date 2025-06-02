@@ -9,6 +9,8 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
     public class AssetController : ControllerBase
     {
         public readonly AssetService _assetService;
+
+
         public AssetController(AssetService assetService)
         {
             _assetService = assetService;
@@ -56,5 +58,6 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
         {
             await _assetService.TriggerExternalSystemEvent(assetId, eventName);
         }
+
     }
 }

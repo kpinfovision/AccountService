@@ -11,6 +11,7 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
         IValuationTypeRepository valuationTypes { get; }
         ILoadValuationRepository LoadValuations { get; }
         ISellerConfigRepository SellerConfig { get; }
+        ILookupRepository Lookup { get; }
         Task<int> SaveChangesAsync();
     }
 }
