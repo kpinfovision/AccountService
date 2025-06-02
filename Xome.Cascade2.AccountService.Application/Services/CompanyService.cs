@@ -98,11 +98,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
                     await _unitOfWork.SaveChangesAsync();
                 }
 
-                await transaction.CommitAsync();
+                if (transaction != null) 
+                    await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                if (transaction != null) 
+                    await transaction.RollbackAsync();
                 Console.WriteLine($"Error during bulk insert: {ex.Message}");
                 throw; // Rethrow if req.
             }

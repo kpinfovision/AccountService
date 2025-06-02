@@ -70,8 +70,9 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
             modelBuilder.Entity<Services>(eb => {
                 eb.HasNoKey();               
             });
+            modelBuilder.Entity<CompanyStatesServed>()
+                   .HasKey(cs => new { cs.CompanyId, cs.StateId });
 
-           
             modelBuilder.Entity<CompanyTypes>().HasData(
                 new CompanyTypes {Id = 1, CompanyTypeId = 1, CompanyTypeName = "XOME" }
             );

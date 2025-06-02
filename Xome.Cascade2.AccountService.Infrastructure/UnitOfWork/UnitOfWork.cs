@@ -53,6 +53,10 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
         }
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
+            if (_context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                return null; // No transaction for in-memory
+            }
             return await _context.Database.BeginTransactionAsync();
         }
     }
