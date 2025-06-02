@@ -35,11 +35,11 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public string LegalEntityName { get; set; }
         public string DisplayName { get; set; }
         public string Abbreviation { get; set; }
+
     }
 
     public class CompanyStatesServed
     {
-        public int Id { get; set; }
         public int CompanyId { get; set; }
         public int StateId { get; set; }
     }
