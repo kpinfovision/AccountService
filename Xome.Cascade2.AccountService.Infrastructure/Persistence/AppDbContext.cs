@@ -26,6 +26,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
         public DbSet<SellerConfig> sellerConfigs => Set<SellerConfig>();
 
         public DbSet<Feature> Features { get; set; }
+        public DbSet<TaxIDTypes> TaxIDTypes { get; set; }
         public DbSet<CompanyTypes> CompanyTypes { get; set; }
         public DbSet<States> States { get; set; }
 
