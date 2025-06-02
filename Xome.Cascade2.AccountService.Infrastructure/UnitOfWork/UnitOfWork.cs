@@ -29,7 +29,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             ICompanyRepository companyRepository,
             IFeatureRepository featureRepository,
             ILookupRepository lookup,
-            ICompanyStatesServedRepository companyStatesServedRepository
+            ICompanyStatesServedRepository companyStatesServedRepository,
             ITaxIDTypesRepository taxIDTypesRepository
             )
         {
