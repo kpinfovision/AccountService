@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -16,11 +17,11 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
     public class CompanyController : ControllerBase
     {
         public readonly CompanyService _companyService;
-        // private readonly IEntityRepository<Company> _entityRepository;
+        private readonly IEntityRepository<Company> _entityRepository;
         public CompanyController(CompanyService companyService, IEntityRepository<Company> entityRepository)
         {
             _companyService = companyService;
-            // _entityRepository = entityRepository;
+            _entityRepository = entityRepository;
         }
         [HttpGet]
         public async Task<IEnumerable<Company>> GetCompanies()
@@ -35,14 +36,14 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Company> AddCompany(List<CompanySaveRequest> companyRequest)
+        public async Task<CompanySaveRequest> AddCompany(List<CompanySaveRequest> companyRequest)
         {
             // await _companyService.AddCompany(company);
-            List<Company> companies = new List<Company>();
-            //companies.Add(company);
-            //await _companyService.BulkInsertCompanyAsync(companies, false);
-            //return company;
-            return companies.First();
+            List<CompanySaveRequest> companies = new List<CompanySaveRequest>();
+            //companies.Add(companies);
+            await _companyService.BulkInsertCompanyAsync(companyRequest, false);                     
+            //return companies.First();
+            return companyRequest.ToList().First();
         }
 
         [HttpPut]
