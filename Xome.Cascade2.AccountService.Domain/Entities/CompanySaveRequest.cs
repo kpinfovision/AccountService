@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Diagnostics.Contracts;
 
 namespace Xome.Cascade2.AccountService.Domain.Entities
 {
@@ -31,7 +32,8 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
 
         public string DisplayName { get; set; } // need confirmation from PO
         public string Abbreviation { get; set; } // need confirmation from PO
-        public int[] StateServed { get; set; }
+        
+        //public int?[] StateServed { get; set; }
 
         public AddressRequest Address { get; set; }
 
@@ -40,7 +42,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
 
     public class AddressRequest
     {
-        public int AddressTypeId { get; set; }
+        public int AddressId { get; set; }        
 
         public string? AddressLine1 { get; set; }
 
@@ -50,6 +52,18 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
 
         public string State { get; set; } = string.Empty;
 
-        public string? Zip { get; set; }
+        public string? Zip { get; set; }        
+        
+        public bool Active { get; set; }        
+
+        public DateTime CreatedOn { get; set; }        
+
+        public int CreatedBy { get; set; }
+
+        public DateTime ModifiedOn { get; set; }
+
+        public int ModifiedBy { get; set; }
+
+
     }
 }

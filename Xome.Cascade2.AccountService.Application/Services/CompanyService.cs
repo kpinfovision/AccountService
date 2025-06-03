@@ -53,65 +53,97 @@ namespace Xome.Cascade2.AccountService.Application.Services
             if (isFileUpload || companies == null || !companies.Any())
                 return;
 
-            var validatedCompanies = new List<Company>();
+            var validatedAddress = new List<Address>();
 
             foreach (var company in companies)
             {
-                bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
-                bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
-                bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
-
-                if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId)
+                validatedAddress.Add(new Address()
                 {
-                    Console.WriteLine($"Duplicate record detected: {company.CompanyName}");
-                    continue;
-                }
-
-                validatedCompanies.Add(new Company()
-                {
-                    CompanyId = company.CompanyId,
-                    CompanyName = company.CompanyName,
-                    LegalEntityName = company.LegalEntityName,
-                    TaxID = company.TaxID,
-                    Abbreviation = company.Abbreviation,
-                    DisplayName = company.DisplayName,
-                    AddressId = company.AddressId,  
-                    Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2),
+                    AddressId = company.AddressId,
+                    Address1 = company.Address.AddressLine1,
+                    Address2 = company.Address.AddressLine2,
                     City = company.Address.City,
                     State = company.Address.State,
                     Zip = company.Address.Zip,
+                    Active = true,
                     CreatedBy = company.UserId,
                     CreatedOn = DateTime.UtcNow,
-                    
+                    ModifiedBy = company.UserId,
+                    ModifiedOn = DateTime.UtcNow,
                 });
-            }
-
-            if (!validatedCompanies.Any())
-            {
-                Console.WriteLine("No valid companies to insert.");
-                return;
-            }
+            }            
 
             // Begin Transaction
             using var transaction = await _unitOfWork.BeginTransactionAsync();
 
             try
             {
+                // Insert Addresses First
+                await _unitOfWork.Repository<Address>().BulkAddAsync(validatedAddress);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Map AddressId back to companies (assumes same order)
+                for (int i = 0; i < companies.Count; i++)
+                {
+                    companies[i].Address.AddressId = validatedAddress[i].AddressId;
+                }
+
+                var validatedCompanies = new List<Company>();
+
+                foreach (var company in companies)
+                {
+                    bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
+                    bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
+                    bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
+
+                    if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId)
+                    {
+                        Console.WriteLine($"Duplicate record detected: {company.CompanyName}");
+                        continue;
+                    }
+
+                    validatedCompanies.Add(new Company()
+                    {
+                        CompanyId = company.CompanyId,
+                        CompanyName = company.CompanyName,
+                        LegalEntityName = company.LegalEntityName,
+                        TaxID = company.TaxID,
+                        Abbreviation = company.Abbreviation,
+                        //DisplayName = company.DisplayName,
+                        //StateServed = company.StateServed,
+                        AddressId = company.Address.AddressId,
+                        //Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2, company.Address.City, company.Address.State, company.Address.Zip),
+                        //City = company.Address.City,
+                        //State = company.Address.State,
+                        //Zip = company.Address.Zip,
+                        CreatedBy = company.UserId,
+                        CreatedOn = DateTime.UtcNow,
+                        ModifiedBy = company.UserId,
+                        ModifiedDate = DateTime.UtcNow,
+                    });
+                }
+
+                if (!validatedCompanies.Any())
+                {
+                    Console.WriteLine("No valid companies to insert.");
+                    return;
+                }
+
                 await _unitOfWork.Repository<Company>().BulkAddAsync(validatedCompanies);
                 //await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
                 await _unitOfWork.SaveChangesAsync();
 
                 var companyStates = new List<CompanyStatesServed>();
 
-                foreach (var company in validatedCompanies)
-                {
-                    companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
-                    {
-                        CompanyId = company.CompanyId,
-                        StateId = stateId
-                    }));
+                //foreach (var company in validatedCompanies)
+                //{
+                //    companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
+                //    {
+                //        CompanyId = company.CompanyId,
+                //        StateId = stateId
+                //    }));
 
-                }
+                //}
 
                 if (companyStates.Any())
                 {

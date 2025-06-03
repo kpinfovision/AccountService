@@ -41,7 +41,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
         public async Task<Address> GetAddressByCompanyId(int addressId)
         {
 
-            var address = _context.Address.FirstOrDefault(a => a.AddressTypeId == addressId) ?? new Address();
+            var address = _context.Address.FirstOrDefault(a => a.AddressId == addressId) ?? new Address();
             return address;
         }
 
