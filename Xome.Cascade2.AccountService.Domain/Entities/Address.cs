@@ -14,6 +14,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         [Column("USER_ID")]
         public int UserId { get; set; }
 
+        [Key]
         [Column("ADDRESS_TYPE_ID")]
         public int AddressTypeId { get; set; }
 

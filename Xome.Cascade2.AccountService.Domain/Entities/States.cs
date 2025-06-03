@@ -1,10 +1,21 @@
-﻿namespace Xome.Cascade2.AccountService.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Xome.Cascade2.AccountService.Domain.Entities
 {
+    [Table("STATES")]
     public class States
     {
-        public int Id { get; set; }
-        public int stateId { get; set; }
-        public string stateName { get; set; }
+        [Key]
+        [Column("STATE_ID")] 
+        public int StateId { get; set; }
+
+        [Column("STATE")]
+        [MaxLength(100)]
+        public string StateName { get; set; }
+
+        [Column("CODE")]
+        [MaxLength(2)]
         public string StateCode { get; set; }
     }
 }

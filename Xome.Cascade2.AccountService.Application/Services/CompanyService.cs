@@ -10,11 +10,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly string _connectionString;
         private readonly IEntityRepository<Company> _entityRepository;
+        private readonly IRepository<Company> _repository;
 
-        public CompanyService(IUnitOfWork unitOfWork, IEntityRepository<Company> entityRepository)
+        public CompanyService(IUnitOfWork unitOfWork, IEntityRepository<Company> entityRepository, IRepository<Company> repository)
         {
             _unitOfWork = unitOfWork;
             _entityRepository = entityRepository;
+            _repository = repository;
         }
         /// we can remove it in future if not required
         public async Task AddCompany(Company company)
@@ -40,12 +42,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
             }
             else
             {
-                await _unitOfWork.Companies.AddCompany(company);
+                await _unitOfWork.Repository<Company>().AddAsync(company);
+                // await _unitOfWork.Companies.AddCompany(company);
                 await _unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task BulkInsertCompanyAsync(IEnumerable<Company> companies, bool isFileUpload = false)
+        public async Task BulkInsertCompanyAsync(List<CompanySaveRequest> companies, bool isFileUpload = false)
         {
             if (isFileUpload || companies == null || !companies.Any())
                 return;
@@ -64,7 +67,23 @@ namespace Xome.Cascade2.AccountService.Application.Services
                     continue;
                 }
 
-                validatedCompanies.Add(company);
+                validatedCompanies.Add(new Company()
+                {
+                    CompanyId = company.CompanyId,
+                    CompanyName = company.CompanyName,
+                    LegalEntityName = company.LegalEntityName,
+                    TaxID = company.TaxID,
+                    Abbreviation = company.Abbreviation,
+                    DisplayName = company.DisplayName,
+                    AddressId = company.AddressId,  
+                    Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2),
+                    City = company.Address.City,
+                    State = company.Address.State,
+                    Zip = company.Address.Zip,
+                    CreatedBy = company.UserId,
+                    CreatedOn = DateTime.UtcNow,
+                    
+                });
             }
 
             if (!validatedCompanies.Any())
@@ -78,7 +97,8 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
             try
             {
-                await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
+                await _unitOfWork.Repository<Company>().BulkAddAsync(validatedCompanies);
+                //await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
                 await _unitOfWork.SaveChangesAsync();
 
                 var companyStates = new List<CompanyStatesServed>();
@@ -90,21 +110,22 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         CompanyId = company.CompanyId,
                         StateId = stateId
                     }));
-                    
+
                 }
 
                 if (companyStates.Any())
                 {
-                    await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
+                    await _unitOfWork.Repository<CompanyStatesServed>().BulkAddAsync(companyStates.ToList());
+                    // await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
                     await _unitOfWork.SaveChangesAsync();
                 }
 
-                if (transaction != null) 
+                if (transaction != null)
                     await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                if (transaction != null) 
+                if (transaction != null)
                     await transaction.RollbackAsync();
                 Console.WriteLine($"Error during bulk insert: {ex.Message}");
                 throw; // Rethrow if req.
@@ -113,23 +134,31 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
         public async Task DeleteCompany(int id)
         {
-            await _unitOfWork.Companies.DeleteCompany(id);
-            await _unitOfWork.SaveChangesAsync();
+            var company = await _unitOfWork.Repository<Company>().GetByIdAsync(id);
+            if (company != null)
+            {
+                await _unitOfWork.Repository<Company>().DeleteAsync(company);
+                //await _unitOfWork.Companies.DeleteCompany(id);
+                await _unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<Company>> GetCompanies()
         {
-            return await _unitOfWork.Companies.GetCompanies();
+            return await _unitOfWork.Repository<Company>().ListAllAsync();
+           // return await _unitOfWork.Companies.GetCompanies();
         }
 
         public async Task<Company> GetCompanyById(int companyId)
         {
-            return await _unitOfWork.Companies.GetCompanyById(companyId);
+            return await _unitOfWork.Repository<Company>().GetByIdAsync(companyId);
+           // return await _unitOfWork.Companies.GetCompanyById(companyId);
         }
 
         public async Task UpdateCompany(Company company)
         {
-            await _unitOfWork.Companies.UpdateCompany(company);
+            await _unitOfWork.Repository<Company>().UpdateAsync(company);
+           // await _unitOfWork.Companies.UpdateCompany(company);
             await _unitOfWork.SaveChangesAsync();
         }
     }

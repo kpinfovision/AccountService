@@ -62,18 +62,18 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
             modelBuilder.Entity<SellerConfig>().HasData(
                 new SellerConfig { Id = 1, ConfigName = "FundsTracking", Status = true}
             );
-            modelBuilder.Entity<Services>(eb => {
-                eb.HasNoKey();               
-            });
+            //modelBuilder.Entity<Services>(eb => {
+            //    eb.HasNoKey();               
+            //});
             modelBuilder.Entity<CompanyStatesServed>()
                    .HasKey(cs => new { cs.CompanyId, cs.StateId });
 
-            modelBuilder.Entity<CompanyTypes>().HasData(
-                new CompanyTypes {Id = 1, CompanyTypeId = 1, CompanyTypeName = "XOME" }
-            );
-            modelBuilder.Entity<States>().HasData(
-                new States {Id = 1, stateId = 1, stateName = "New York", StateCode = "NY" }
-            );            
+            //modelBuilder.Entity<CompanyTypes>().HasData(
+            //    new CompanyTypes {Id = 1, CompanyTypeId = 1, CompanyTypeName = "XOME" }
+            //);
+            //modelBuilder.Entity<States>().HasData(
+            //    new States {Id = 1, stateId = 1, stateName = "New York", StateCode = "NY" }
+            //);            
         }
     }
 }

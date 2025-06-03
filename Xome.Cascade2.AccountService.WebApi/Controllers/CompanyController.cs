@@ -35,13 +35,14 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Company> AddCompany(Company company)
+        public async Task<Company> AddCompany(List<CompanySaveRequest> companyRequest)
         {
             // await _companyService.AddCompany(company);
             List<Company> companies = new List<Company>();
-            companies.Add(company);
-            await _companyService.BulkInsertCompanyAsync(companies, false);
-            return company;
+            //companies.Add(company);
+            //await _companyService.BulkInsertCompanyAsync(companies, false);
+            //return company;
+            return companies.First();
         }
 
         [HttpPut]

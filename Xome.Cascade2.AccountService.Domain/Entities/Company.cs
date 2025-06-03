@@ -68,7 +68,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         /// below are attributes of address
         public string Address { get; set; }
         public string City { get; set; }
-        public int State { get; set; }
+        public string State { get; set; }
         public string Zip { get; set; }
         public string Fax { get; set; }
         public string PrimaryPhone { get; set; }

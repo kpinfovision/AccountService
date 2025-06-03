@@ -19,13 +19,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
         public async Task<dynamic> GetLookupData()
         {
-            var removedReasons = await this.GetRemovedReasonAsync();
+           // var removedReasons = await this.GetRemovedReasonAsync();
             var services = await this.GetServicesAsync();
             var companyTypes = await this.GetCompaniesTypes();
             var states = await this.GetAllStates();
             return new
             {
-                removedReasons = removedReasons,
+                removedReasons = new {},
                 services = services,
                 companyTypes = companyTypes,
                 states = states,
