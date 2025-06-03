@@ -21,8 +21,8 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
         public async Task AddAsset(Asset asset)
         {
-
-            await _unitOfWork.Assets.AddAsset(asset);
+            await _unitOfWork.Repository<Asset>().AddAsync(asset);
+            //await _unitOfWork.Assets.AddAsset(asset);
             await _unitOfWork.SaveChangesAsync();
 
             //var getCamundaClusterId = _configuration["CamundaClusterID"];
@@ -31,13 +31,20 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
         public async Task DeleteAsset(int id)
         {
-            await _unitOfWork.Assets.DeleteAsset(id);
-            await _unitOfWork.SaveChangesAsync();
+            var asset = await _unitOfWork.Repository<Asset>().GetByIdAsync(id);
+            if(asset != null)
+            {
+                await _unitOfWork.Repository<Asset>().DeleteAsync(asset);
+                //await _unitOfWork.Assets.DeleteAsset(id);
+                await _unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<Asset>> GetAllAssets()
         {
-            return await _unitOfWork.Assets.GetAllAssets();
+            var assets = await _unitOfWork.Repository<Asset>().ListAllAsync();
+            return assets;
+           // return await _unitOfWork.Assets.GetAllAssets();
         }
 
         public async Task<Asset> GetAssetById(string assetId)
