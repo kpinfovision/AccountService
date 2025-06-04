@@ -6,7 +6,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
     [Table("FEATURE")]
     public class Feature
     {
-        [Column("FEATURE_KEY")]
+        [Column("FEATURE_ID")]
         public int FeatureId { get; set; }
 
         [Column("FEATURE_NAME")]

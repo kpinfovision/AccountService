@@ -41,8 +41,8 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public string? City { get; set; }
         public string State { get; set; } = string.Empty;
         public string? Zip { get; set; }
-        public int? Phone { get; set; }
-        public int? Ext { get; set; }
+        public string? Phone { get; set; }
+        public string? Ext { get; set; }
         public string? Fax { get; set; }
         public bool Active { get; set; }        
     }
