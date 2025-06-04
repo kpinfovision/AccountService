@@ -43,7 +43,6 @@ namespace Xome.Cascade2.AccountService.Application.Services
             else
             {
                 await _unitOfWork.Repository<Company>().AddAsync(company);
-                // await _unitOfWork.Companies.AddCompany(company);
                 await _unitOfWork.SaveChangesAsync();
             }
         }
@@ -65,6 +64,9 @@ namespace Xome.Cascade2.AccountService.Application.Services
                     City = company.Address.City,
                     State = company.Address.State,
                     Zip = company.Address.Zip,
+                    Phone = company.Address.Phone,
+                    Ext = company.Address.Ext,
+                    // Fax = company.Address.Fax,
                     Active = true,
                     CreatedBy = 1, // need to change once token is implemented
                     CreatedOn = DateTime.UtcNow,
@@ -114,12 +116,6 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         CreatedOn = DateTime.UtcNow,
                         ModifiedBy = 1, // need to get it from token once implemented
                         ModifiedDate = DateTime.UtcNow,
-                        //Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2, company.Address.City, company.Address.State, company.Address.Zip),
-                        //City = company.Address.City,
-                        //State = company.Address.State,
-                        //Zip = company.Address.Zip,
-                        //DisplayName = company.DisplayName,
-                        //StateServed = company.StateServed,
                     });
                 }
 
@@ -131,23 +127,6 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
                 await _unitOfWork.Repository<Company>().BulkAddAsync(validatedCompanies);
                 await _unitOfWork.SaveChangesAsync();
-
-                // var companyStates = new List<CompanyStatesServed>();
-                //await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
-                //foreach (var company in validatedCompanies)
-                //{
-                //    companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
-                //    {
-                //        CompanyId = company.CompanyId,
-                //        StateId = stateId
-                //    }));
-                //}
-                //if (companyStates.Any())
-                //{
-                //    // await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
-                //    await _unitOfWork.Repository<CompanyStatesServed>().BulkAddAsync(companyStates.ToList());
-                //    await _unitOfWork.SaveChangesAsync();
-                //}
 
                 if (transaction != null)
                     await transaction.CommitAsync();

@@ -58,6 +58,8 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
 
         [Column("PHONE")]
         public int? Phone { get; set; }
+        [Column("FAX")]
+        public int? Fax { get; set; }
 
         [Column("EXT")]
         public int? Ext { get; set; }

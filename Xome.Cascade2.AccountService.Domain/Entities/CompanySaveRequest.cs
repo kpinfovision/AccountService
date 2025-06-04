@@ -36,17 +36,14 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
     public class AddressRequest
     {
         public int AddressId { get; set; }        
-
         public string? AddressLine1 { get; set; }
-
         public string? AddressLine2 { get; set; }
-
         public string? City { get; set; }
-
         public string State { get; set; } = string.Empty;
-
-        public string? Zip { get; set; }        
-        
+        public string? Zip { get; set; }
+        public int? Phone { get; set; }
+        public int? Ext { get; set; }
+        public int? Fax { get; set; }
         public bool Active { get; set; }        
     }
 }
