@@ -59,16 +59,16 @@ namespace Xome.Cascade2.AccountService.Application.Services
             {
                 validatedAddress.Add(new Address()
                 {
-                    AddressId = company.AddressId,
+                    AddressId = 0, // company.AddressId,
                     Address1 = company.Address.AddressLine1,
                     Address2 = company.Address.AddressLine2,
                     City = company.Address.City,
                     State = company.Address.State,
                     Zip = company.Address.Zip,
                     Active = true,
-                    CreatedBy = company.UserId,
+                    CreatedBy = 1, // need to change once token is implemented
                     CreatedOn = DateTime.UtcNow,
-                    ModifiedBy = company.UserId,
+                    ModifiedBy = 1,
                     ModifiedOn = DateTime.UtcNow,
                 });
             }            
@@ -94,7 +94,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 {
                     bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
                     bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
-                    bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
+                    bool isDuplicateTaxId = company.TaxIDType > 0 ? await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID) : false;
 
                     if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId)
                     {
@@ -109,17 +109,17 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         LegalEntityName = company.LegalEntityName,
                         TaxID = company.TaxID,
                         Abbreviation = company.Abbreviation,
-                        //DisplayName = company.DisplayName,
-                        //StateServed = company.StateServed,
                         AddressId = company.Address.AddressId,
+                        CreatedBy = 1, // need to get it from token once implemented
+                        CreatedOn = DateTime.UtcNow,
+                        ModifiedBy = 1, // need to get it from token once implemented
+                        ModifiedDate = DateTime.UtcNow,
                         //Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2, company.Address.City, company.Address.State, company.Address.Zip),
                         //City = company.Address.City,
                         //State = company.Address.State,
                         //Zip = company.Address.Zip,
-                        CreatedBy = company.UserId,
-                        CreatedOn = DateTime.UtcNow,
-                        ModifiedBy = company.UserId,
-                        ModifiedDate = DateTime.UtcNow,
+                        //DisplayName = company.DisplayName,
+                        //StateServed = company.StateServed,
                     });
                 }
 
@@ -130,11 +130,10 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 }
 
                 await _unitOfWork.Repository<Company>().BulkAddAsync(validatedCompanies);
-                //await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
                 await _unitOfWork.SaveChangesAsync();
 
-                var companyStates = new List<CompanyStatesServed>();
-
+                // var companyStates = new List<CompanyStatesServed>();
+                //await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
                 //foreach (var company in validatedCompanies)
                 //{
                 //    companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
@@ -142,15 +141,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 //        CompanyId = company.CompanyId,
                 //        StateId = stateId
                 //    }));
-
                 //}
-
-                if (companyStates.Any())
-                {
-                    await _unitOfWork.Repository<CompanyStatesServed>().BulkAddAsync(companyStates.ToList());
-                    // await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
-                    await _unitOfWork.SaveChangesAsync();
-                }
+                //if (companyStates.Any())
+                //{
+                //    // await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
+                //    await _unitOfWork.Repository<CompanyStatesServed>().BulkAddAsync(companyStates.ToList());
+                //    await _unitOfWork.SaveChangesAsync();
+                //}
 
                 if (transaction != null)
                     await transaction.CommitAsync();
@@ -170,8 +167,8 @@ namespace Xome.Cascade2.AccountService.Application.Services
             if (company != null)
             {
                 await _unitOfWork.Repository<Company>().DeleteAsync(company);
-                //await _unitOfWork.Companies.DeleteCompany(id);
                 await _unitOfWork.SaveChangesAsync();
+                //await _unitOfWork.Companies.DeleteCompany(id);
             }
         }
 

@@ -10,36 +10,29 @@ using System.Diagnostics.Contracts;
 
 namespace Xome.Cascade2.AccountService.Domain.Entities
 {
-    public class CompanySaveRequest
+    /// <summary>
+    /// This class will be used for both add & update
+    /// CompanyId: 0 incase of add and > 0 for update
+    /// </summary>
+    public class CompanySaveRequest 
     {
         public int CompanyId { get; set; }
         public bool Status { get; set; }
-
-        [JsonIgnore]
-        public int RemovedReason { get; set; } // not on priority
-
         public string CompanyName { get; set; }
         public int? TaxIDType { get; set; }
-
         public string? TaxID { get; set; }
-
         public string? Notes { get; set; }
-
         public string? LegalEntityName { get; set; }
         public bool IsOutsourced { get; set; }
-
-        public int UserId { get; set; }
-
-        public string DisplayName { get; set; } // need confirmation from PO
-        public string Abbreviation { get; set; } // need confirmation from PO
-        
-        //public int?[] StateServed { get; set; }
-
+        public string DisplayName { get; set; }
+        public string Abbreviation { get; set; }
         public AddressRequest Address { get; set; }
-
-        public int AddressId { get; set; }
     }
 
+    /// <summary>
+    /// This class will be used for both add & update
+    /// AddressId: 0 incase of add and > 0 for update
+    /// </summary>
     public class AddressRequest
     {
         public int AddressId { get; set; }        
@@ -55,15 +48,5 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public string? Zip { get; set; }        
         
         public bool Active { get; set; }        
-
-        public DateTime CreatedOn { get; set; }        
-
-        public int CreatedBy { get; set; }
-
-        public DateTime ModifiedOn { get; set; }
-
-        public int ModifiedBy { get; set; }
-
-
     }
 }
