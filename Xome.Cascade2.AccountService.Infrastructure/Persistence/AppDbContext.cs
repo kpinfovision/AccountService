@@ -73,7 +73,16 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Data
             //);
             //modelBuilder.Entity<States>().HasData(
             //    new States {Id = 1, stateId = 1, stateName = "New York", StateCode = "NY" }
-            //);            
+            //);
+            //
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.Property(e => e.Latitude)
+                      .HasPrecision(9, 6);
+
+                entity.Property(e => e.Longitude)
+                      .HasPrecision(9, 6);
+            });
         }
     }
 }

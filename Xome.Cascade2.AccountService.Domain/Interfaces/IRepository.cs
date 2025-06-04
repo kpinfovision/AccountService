@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xome.Cascade2.AccountService.Domain.Entities;
+using Xome.Cascade2.AccountService.Domain.Entities.Pagination;
 
 namespace Xome.Cascade2.AccountService.Domain.Interfaces
 {
@@ -17,5 +18,7 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
         Task DeleteAsync(T entity);
         Task<bool> ExistsAsync(Guid id);
         Task BulkAddAsync(List<T> entities);
+
+        Task<PagedResult<T>> GetAsync(PagedRequest parameters);
     }
 }

@@ -5,18 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xome.Cascade2.AccountService.Domain.Entities;
+using Xome.Cascade2.AccountService.Domain.Entities.Pagination;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
 using Xome.Cascade2.AccountService.Infrastructure.Data;
+using System.Linq.Dynamic.Core;
 
 namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly DbContext _dbContext;
-
-        public Repository(DbContext dbContext)
+        protected readonly AppDbContext _dbContext;
+        private readonly DbSet<T> _dbSet;
+        public Repository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
+            _dbSet = dbContext.Set<T>();
         }
 
         public async Task<T?> GetByIdAsync(Guid id)
@@ -69,5 +72,36 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
             _dbContext.Set<T>().AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<Xome.Cascade2.AccountService.Domain.Entities.PagedResult<T>> GetAsync(PagedRequest parameters)
+        {
+            var query = _dbSet.AsQueryable();
+
+            // Filtering
+            if (!string.IsNullOrWhiteSpace(parameters.FilterColumn) &&
+                !string.IsNullOrWhiteSpace(parameters.FilterValue))
+            {
+                var filterExpression = $"{parameters.FilterColumn}.Contains(@0)";
+                query = query.Where(filterExpression, parameters.FilterValue);
+            }
+
+            // Sorting
+            if (!string.IsNullOrWhiteSpace(parameters.SortColumn))
+            {
+                var sortOrder = parameters.SortDescending ? "descending" : "ascending";
+                var orderExpression = $"{parameters.SortColumn} {sortOrder}";
+                query = query.OrderBy(orderExpression);
+            }
+
+            // Pagination
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToListAsync();
+
+            return new Xome.Cascade2.AccountService.Domain.Entities.PagedResult<T> { Items = items, TotalCount = totalCount };
+        }
     }
 }
+
