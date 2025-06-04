@@ -66,7 +66,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
                     Zip = company.Address.Zip,
                     Phone = company.Address.Phone,
                     Ext = company.Address.Ext,
-                    // Fax = company.Address.Fax,
+                    Fax = company.Address.Fax,
                     Active = true,
                     CreatedBy = 1, // need to change once token is implemented
                     CreatedOn = DateTime.UtcNow,

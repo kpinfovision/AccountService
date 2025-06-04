@@ -43,7 +43,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public string? Zip { get; set; }
         public int? Phone { get; set; }
         public int? Ext { get; set; }
-        public int? Fax { get; set; }
+        public string? Fax { get; set; }
         public bool Active { get; set; }        
     }
 }
