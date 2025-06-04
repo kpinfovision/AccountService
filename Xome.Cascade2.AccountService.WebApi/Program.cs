@@ -9,6 +9,7 @@ using Xome.Cascade2.AccountService.WebApi.Middlewares;
 using Azure.Messaging.ServiceBus;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
 using Xome.Cascade2.AccountService.Infrastructure.Repositories;
+using Xome.Cascade2.AccountService.Infrastructure.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddScoped<SellerConfigService>();
 builder.Services.AddScoped<LookupService>();
 builder.Services.AddScoped<ServiceBusPublisher>();
 builder.Services.AddScoped<ILookupRepository, LookupRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

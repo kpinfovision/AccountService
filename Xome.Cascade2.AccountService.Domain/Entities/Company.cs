@@ -25,17 +25,17 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         [Column("ACTIVE")]
         public bool Status { get; set; }
 
-        [JsonIgnore]
-        public int RemovedReason { get; set; } // not on priority
+        //[JsonIgnore]
+        //public int RemovedReason { get; set; } // not on priority
 
         [Column("NAME")]
         [Required]
         [MaxLength(30)]
         public string CompanyName { get; set; }
-        [Column("TAXTYPEID")]
+        [Column("TAX_TYPE_ID")]
         public int? TaxIDType { get; set; }
 
-        [Column("TAXID")]
+        [Column("TAX_ID")]
         [MaxLength(100)]
         public string? TaxID { get; set; }
         [Column("NOTES")]
@@ -56,25 +56,27 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         [Column("CREATED_BY")]
         public int CreatedBy { get; set; }
 
-        [Column("MODIFIED_DATE")]
+        [Column("MODIFIED_ON")]
         public DateTime? ModifiedDate { get; set; }
 
-        [Column("MODIFIED_ON")]
+        [Column("MODIFIED_BY")]
         public int? ModifiedBy { get; set; }
-        public string DisplayName { get; set; } // need confirmation from PO
+        //public string DisplayName { get; set; } // need confirmation from PO
+        [Column("ABBREVIATION")]
         public string Abbreviation { get; set; } // need confirmation from PO
-        public int[] StateServed { get; set; }
+        
+        //public int?[] StateServed { get; set; }
 
-        /// below are attributes of address
-        public string Address { get; set; }
-        public string City { get; set; }
-        public int State { get; set; }
-        public string Zip { get; set; }
-        public string Fax { get; set; }
-        public string PrimaryPhone { get; set; }
-        public string Ext { get; set; }
+        /// below are attributes of address        
+        //public string Address { get; set; }
+        //public string City { get; set; }
+        //public string State { get; set; }
+        //public string Zip { get; set; }
+        //public string Fax { get; set; }
+        //public string PrimaryPhone { get; set; }
+        //public string Ext { get; set; }
 
-        [JsonIgnore]
+        [Column("ADDRESS_ID")]
         public int AddressId { get; set; }
 
     }

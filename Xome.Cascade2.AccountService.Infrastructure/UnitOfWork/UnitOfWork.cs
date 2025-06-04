@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
 using Xome.Cascade2.AccountService.Infrastructure.Data;
+using Xome.Cascade2.AccountService.Infrastructure.Repositories;
 
 namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
+        private readonly Dictionary<string, object> _repositories = new();
+
         public IUserRepository Users { get; }
         public IAssetRepository Assets { get; }
         public ICompanyRepository Companies { get; }
@@ -48,6 +51,20 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
             TaxIDTypes = taxIDTypesRepository;
             Address = addressRepository;
         }
+
+        public IRepository<T> Repository<T>() where T : class
+        {
+            var typeName = typeof(T).Name;
+
+            if (!_repositories.ContainsKey(typeName))
+            {
+                var repoInstance = new Repository<T>(_context);
+                _repositories[typeName] = repoInstance;
+            }
+
+            return (IRepository<T>)_repositories[typeName];
+        }
+
         public void Dispose()
         {
             _context.Dispose();

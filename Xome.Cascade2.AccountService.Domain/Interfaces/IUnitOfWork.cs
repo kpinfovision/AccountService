@@ -5,6 +5,7 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
+        IRepository<T> Repository<T>() where T : class;
         IUserRepository Users { get; }
         IAssetRepository Assets { get; }
         ICompanyRepository Companies { get; }

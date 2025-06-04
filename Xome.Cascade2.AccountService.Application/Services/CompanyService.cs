@@ -10,11 +10,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly string _connectionString;
         private readonly IEntityRepository<Company> _entityRepository;
+        private readonly IRepository<Company> _repository;
 
-        public CompanyService(IUnitOfWork unitOfWork, IEntityRepository<Company> entityRepository)
+        public CompanyService(IUnitOfWork unitOfWork, IEntityRepository<Company> entityRepository, IRepository<Company> repository)
         {
             _unitOfWork = unitOfWork;
             _entityRepository = entityRepository;
+            _repository = repository;
         }
         /// we can remove it in future if not required
         public async Task AddCompany(Company company)
@@ -40,71 +42,122 @@ namespace Xome.Cascade2.AccountService.Application.Services
             }
             else
             {
-                await _unitOfWork.Companies.AddCompany(company);
+                await _unitOfWork.Repository<Company>().AddAsync(company);
+                // await _unitOfWork.Companies.AddCompany(company);
                 await _unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task BulkInsertCompanyAsync(IEnumerable<Company> companies, bool isFileUpload = false)
+        public async Task BulkInsertCompanyAsync(List<CompanySaveRequest> companies, bool isFileUpload = false)
         {
             if (isFileUpload || companies == null || !companies.Any())
                 return;
 
-            var validatedCompanies = new List<Company>();
+            var validatedAddress = new List<Address>();
 
             foreach (var company in companies)
             {
-                bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
-                bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
-                bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
-
-                if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId)
+                validatedAddress.Add(new Address()
                 {
-                    Console.WriteLine($"Duplicate record detected: {company.CompanyName}");
-                    continue;
-                }
-
-                validatedCompanies.Add(company);
-            }
-
-            if (!validatedCompanies.Any())
-            {
-                Console.WriteLine("No valid companies to insert.");
-                return;
-            }
+                    AddressId = company.AddressId,
+                    Address1 = company.Address.AddressLine1,
+                    Address2 = company.Address.AddressLine2,
+                    City = company.Address.City,
+                    State = company.Address.State,
+                    Zip = company.Address.Zip,
+                    Active = true,
+                    CreatedBy = company.UserId,
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedBy = company.UserId,
+                    ModifiedOn = DateTime.UtcNow,
+                });
+            }            
 
             // Begin Transaction
             using var transaction = await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
+                // Insert Addresses First
+                await _unitOfWork.Repository<Address>().BulkAddAsync(validatedAddress);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Map AddressId back to companies (assumes same order)
+                for (int i = 0; i < companies.Count; i++)
+                {
+                    companies[i].Address.AddressId = validatedAddress[i].AddressId;
+                }
+
+                var validatedCompanies = new List<Company>();
+
+                foreach (var company in companies)
+                {
+                    bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
+                    bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
+                    bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
+
+                    if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId)
+                    {
+                        Console.WriteLine($"Duplicate record detected: {company.CompanyName}");
+                        continue;
+                    }
+
+                    validatedCompanies.Add(new Company()
+                    {
+                        CompanyId = company.CompanyId,
+                        CompanyName = company.CompanyName,
+                        LegalEntityName = company.LegalEntityName,
+                        TaxID = company.TaxID,
+                        Abbreviation = company.Abbreviation,
+                        //DisplayName = company.DisplayName,
+                        //StateServed = company.StateServed,
+                        AddressId = company.Address.AddressId,
+                        //Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2, company.Address.City, company.Address.State, company.Address.Zip),
+                        //City = company.Address.City,
+                        //State = company.Address.State,
+                        //Zip = company.Address.Zip,
+                        CreatedBy = company.UserId,
+                        CreatedOn = DateTime.UtcNow,
+                        ModifiedBy = company.UserId,
+                        ModifiedDate = DateTime.UtcNow,
+                    });
+                }
+
+                if (!validatedCompanies.Any())
+                {
+                    Console.WriteLine("No valid companies to insert.");
+                    return;
+                }
+
+                await _unitOfWork.Repository<Company>().BulkAddAsync(validatedCompanies);
+                //await _unitOfWork.Companies.BulkInsertCompany(validatedCompanies);
                 await _unitOfWork.SaveChangesAsync();
 
                 var companyStates = new List<CompanyStatesServed>();
 
-                foreach (var company in validatedCompanies)
-                {
-                    companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
-                    {
-                        CompanyId = company.CompanyId,
-                        StateId = stateId
-                    }));
-                    
-                }
+                //foreach (var company in validatedCompanies)
+                //{
+                //    companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
+                //    {
+                //        CompanyId = company.CompanyId,
+                //        StateId = stateId
+                //    }));
+
+                //}
 
                 if (companyStates.Any())
                 {
-                    await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
+                    await _unitOfWork.Repository<CompanyStatesServed>().BulkAddAsync(companyStates.ToList());
+                    // await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
                     await _unitOfWork.SaveChangesAsync();
                 }
 
-                if (transaction != null) 
+                if (transaction != null)
                     await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                if (transaction != null) 
+                if (transaction != null)
                     await transaction.RollbackAsync();
                 Console.WriteLine($"Error during bulk insert: {ex.Message}");
                 throw; // Rethrow if req.
@@ -113,23 +166,31 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
         public async Task DeleteCompany(int id)
         {
-            await _unitOfWork.Companies.DeleteCompany(id);
-            await _unitOfWork.SaveChangesAsync();
+            var company = await _unitOfWork.Repository<Company>().GetByIdAsync(id);
+            if (company != null)
+            {
+                await _unitOfWork.Repository<Company>().DeleteAsync(company);
+                //await _unitOfWork.Companies.DeleteCompany(id);
+                await _unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<Company>> GetCompanies()
         {
-            return await _unitOfWork.Companies.GetCompanies();
+            return await _unitOfWork.Repository<Company>().ListAllAsync();
+           // return await _unitOfWork.Companies.GetCompanies();
         }
 
         public async Task<Company> GetCompanyById(int companyId)
         {
-            return await _unitOfWork.Companies.GetCompanyById(companyId);
+            return await _unitOfWork.Repository<Company>().GetByIdAsync(companyId);
+           // return await _unitOfWork.Companies.GetCompanyById(companyId);
         }
 
         public async Task UpdateCompany(Company company)
         {
-            await _unitOfWork.Companies.UpdateCompany(company);
+            await _unitOfWork.Repository<Company>().UpdateAsync(company);
+           // await _unitOfWork.Companies.UpdateCompany(company);
             await _unitOfWork.SaveChangesAsync();
         }
     }
