@@ -57,11 +57,11 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public int? ModifiedBy { get; set; }
 
         [Column("PHONE")]
-        public int? Phone { get; set; }
+        public string? Phone { get; set; }
         [Column("FAX")]
         public string? Fax { get; set; }
 
         [Column("EXT")]
-        public int? Ext { get; set; }
+        public string? Ext { get; set; }
     }
 }
