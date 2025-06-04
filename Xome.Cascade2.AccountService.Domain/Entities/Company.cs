@@ -19,15 +19,10 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
     {
         [Column("ASSET_MANAGEMENT_ID")]
         public int CompanyId { get; set; }
-        //[JsonIgnore] // not req.
-        //public int CompanyType { get; set; }
 
         [Column("ACTIVE")]
         public bool Status { get; set; }
-
-        //[JsonIgnore]
-        //public int RemovedReason { get; set; } // not on priority
-
+              
         [Column("NAME")]
         [Required]
         [MaxLength(30)]
@@ -61,21 +56,10 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
 
         [Column("MODIFIED_BY")]
         public int? ModifiedBy { get; set; }
-        //public string DisplayName { get; set; } // need confirmation from PO
+        //public string DisplayName { get; set; }
         [Column("ABBREVIATION")]
-        public string Abbreviation { get; set; } // need confirmation from PO
+        public string Abbreviation { get; set; } 
         
-        //public int?[] StateServed { get; set; }
-
-        /// below are attributes of address        
-        //public string Address { get; set; }
-        //public string City { get; set; }
-        //public string State { get; set; }
-        //public string Zip { get; set; }
-        //public string Fax { get; set; }
-        //public string PrimaryPhone { get; set; }
-        //public string Ext { get; set; }
-
         [Column("ADDRESS_ID")]
         public int AddressId { get; set; }
 
