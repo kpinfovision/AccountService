@@ -74,6 +74,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         [Column("ADDRESS_ID")]
         public int AddressId { get; set; }
 
+        public Address Address { get; set; }
     }
 
     [Table("ORG_STATE")]

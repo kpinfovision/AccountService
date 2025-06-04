@@ -73,16 +73,27 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Xome.Cascade2.AccountService.Domain.Entities.PagedResult<T>> GetAsync(PagedRequest parameters)
+        public async Task<Xome.Cascade2.AccountService.Domain.Entities.PagedResult<T>> GetAsync(PagedRequest parameters,Func<IQueryable<T>, IQueryable<T>>? include = null)
         {
             var query = _dbSet.AsQueryable();
 
+            // Optional include (e.g., p => p.Include(x => x.Category))
+            if (include != null)
+                query = include(query);
+
             // Filtering
-            if (!string.IsNullOrWhiteSpace(parameters.FilterColumn) &&
-                !string.IsNullOrWhiteSpace(parameters.FilterValue))
+            if (parameters.Filters != null)
             {
-                var filterExpression = $"{parameters.FilterColumn}.Contains(@0)";
-                query = query.Where(filterExpression, parameters.FilterValue);
+                foreach (var filter in parameters.Filters)
+                {
+                    string key = filter.Key;   // e.g., "Category.Name"
+                    string value = filter.Value;
+
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        query = query.Where($"{key}.Contains(@0)", value);
+                    }
+                }
             }
 
             // Sorting
