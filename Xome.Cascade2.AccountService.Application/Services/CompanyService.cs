@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Amqp.Framing;
+using Microsoft.EntityFrameworkCore;
 using Xome.Cascade2.AccountService.Domain.Entities;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
 
@@ -215,13 +216,19 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 Status = company.Status ? "Active" : "InActive",
                 TaxId = company.TaxID,
                 TaxIdType = string.Empty, // will assign once master data is available
-                AddressId = company.AddressId,
-                AddressLine1 = address != null ? address.Address1 : string.Empty,
-                AddressLine2 = address != null ? address.Address2 : string.Empty,
-                City = address != null ? address.City : string.Empty,
-                State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
-                StateCd = address.State,
-                Zip = address != null ? address.Zip : string.Empty,
+                Address = new AddressResponse()
+                {
+                    AddressId = company.AddressId,
+                    AddressLine1 = address != null ? address.Address1 : string.Empty,
+                    AddressLine2 = address != null ? address.Address2 : string.Empty,
+                    City = address != null ? address.City : string.Empty,
+                    State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
+                    StateCd = address != null ? address.State : string.Empty,
+                    Zip = address != null ? address.Zip : string.Empty,
+                    Phone = address != null ? address.Phone : string.Empty,
+                    Fax = address != null ? address.Fax : string.Empty,
+                    Ext = address != null ? address.Ext : string.Empty,
+                },
                 TaxIdTypeId = 0,
             };
         }
@@ -229,15 +236,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
         public async Task<List<CompanySearchResponse>> GetFilteredCompanies(CompanySearchRequest parameters)
         {
             var companySearchList = new List<CompanySearchResponse>();
-
-            //if (parameters.CompanyTypes.Any(ct => ct == (int)CompanyType.ASSETMANAGEMENTCO))
-            //{
-            //    var companies = await _unitOfWork.Repository<Company>().ListAllAsync();
-
-            //}
-           // var companies = await _unitOfWork.Repository<Company>().ListAllAsync();
-
-            var pagedResult =  await _unitOfWork.Repository<Company>().GetAsync(parameters.SortFilters);
+            var pagedResult =  await _unitOfWork.Repository<Company>().GetAsync(parameters.SortFilters, q=>q.Include(c=>c.Address));
             if (pagedResult.Items.Any())
             {
                 var result = pagedResult.Items.Where(i => i.Status == parameters.Status).ToList();
@@ -258,13 +257,19 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         Status = company.Status ? "Active" : "InActive",
                         TaxId = company.TaxID,
                         TaxIdType = string.Empty, // will assign once master data is available
-                        AddressId = company.AddressId,
-                        AddressLine1 = address != null ? address.Address1 : string.Empty,
-                        AddressLine2 = address != null ? address.Address2 : string.Empty,
-                        City = address != null ? address.City : string.Empty,
-                        State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
-                        StateCd = address.State,
-                        Zip = address != null ? address.Zip : string.Empty,
+                        Address = new AddressResponse()
+                        {
+                            AddressId = company.AddressId,
+                            AddressLine1 = address != null ? address.Address1 : string.Empty,
+                            AddressLine2 = address != null ? address.Address2 : string.Empty,
+                            City = address != null ? address.City : string.Empty,
+                            State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
+                            StateCd = address != null ? address.State : string.Empty,
+                            Zip = address != null ? address.Zip : string.Empty,
+                            Phone = address != null ? address.Phone : string.Empty,
+                            Fax = address != null ? address.Fax : string.Empty,
+                            Ext = address != null ? address.Ext : string.Empty,
+                        },
                         TaxIdTypeId = 0,
                     });
                 }

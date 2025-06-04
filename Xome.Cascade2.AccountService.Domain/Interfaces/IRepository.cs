@@ -19,6 +19,6 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
         Task<bool> ExistsAsync(Guid id);
         Task BulkAddAsync(List<T> entities);
 
-        Task<PagedResult<T>> GetAsync(PagedRequest parameters);
+        Task<Xome.Cascade2.AccountService.Domain.Entities.PagedResult<T>> GetAsync(PagedRequest parameters, Func<IQueryable<T>, IQueryable<T>>? include = null);
     }
 }
