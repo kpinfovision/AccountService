@@ -1,6 +1,6 @@
-﻿using Xome.Cascade2.AccountService.Domain.Entities;
+﻿using Microsoft.Azure.Amqp.Framing;
+using Xome.Cascade2.AccountService.Domain.Entities;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Xome.Cascade2.AccountService.Application.Services
 {
@@ -52,11 +52,11 @@ namespace Xome.Cascade2.AccountService.Application.Services
             if (isFileUpload || companies == null || !companies.Any())
                 return;
 
-            var validatedAddress = new List<Address>();
+            var validatedAddress = new List<Xome.Cascade2.AccountService.Domain.Entities.Address>();
 
             foreach (var company in companies)
             {
-                validatedAddress.Add(new Address()
+                validatedAddress.Add(new Xome.Cascade2.AccountService.Domain.Entities.Address()
                 {
                     AddressId = 0, // company.AddressId,
                     Address1 = company.Address.AddressLine1,
@@ -73,7 +73,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
                     ModifiedBy = 1,
                     ModifiedOn = DateTime.UtcNow,
                 });
-            }            
+            }
 
             // Begin Transaction
             using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -81,7 +81,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
             try
             {
                 // Insert Addresses First
-                await _unitOfWork.Repository<Address>().BulkAddAsync(validatedAddress);
+                await _unitOfWork.Repository<Xome.Cascade2.AccountService.Domain.Entities.Address>().BulkAddAsync(validatedAddress);
                 await _unitOfWork.SaveChangesAsync();
 
                 // Map AddressId back to companies (assumes same order)
@@ -116,6 +116,14 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         CreatedOn = DateTime.UtcNow,
                         ModifiedBy = 1, // need to get it from token once implemented
                         ModifiedDate = DateTime.UtcNow,
+                        Status = company.Status,
+                        //Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2, company.Address.City, company.Address.State, company.Address.Zip),
+                        //City = company.Address.City,
+                        //State = company.Address.State,
+                        //Zip = company.Address.Zip,
+                        //DisplayName = company.DisplayName,
+                        //StateServed = company.StateServed,
+
                     });
                 }
 
@@ -128,8 +136,28 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 await _unitOfWork.Repository<Company>().BulkAddAsync(validatedCompanies);
                 await _unitOfWork.SaveChangesAsync();
 
-                if (transaction != null)
-                    await transaction.CommitAsync();
+                var companyStates = new List<CompanyStatesServed>();
+
+                foreach (var company in validatedCompanies)
+                {
+                    //companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
+                    //{
+                    //    CompanyId = company.CompanyId,
+                    //    StateId = stateId
+                    //}));
+
+                    //}
+
+                    if (companyStates.Any())
+                    {
+                        await _unitOfWork.Repository<CompanyStatesServed>().BulkAddAsync(companyStates.ToList());
+                        // await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+
+                    if (transaction != null)
+                        await transaction.CommitAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -139,6 +167,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 throw; // Rethrow if req.
             }
         }
+
 
         public async Task DeleteCompany(int id)
         {
@@ -154,20 +183,94 @@ namespace Xome.Cascade2.AccountService.Application.Services
         public async Task<IEnumerable<Company>> GetCompanies()
         {
             return await _unitOfWork.Repository<Company>().ListAllAsync();
-           // return await _unitOfWork.Companies.GetCompanies();
+            // return await _unitOfWork.Companies.GetCompanies();
         }
 
         public async Task<Company> GetCompanyById(int companyId)
         {
             return await _unitOfWork.Repository<Company>().GetByIdAsync(companyId);
-           // return await _unitOfWork.Companies.GetCompanyById(companyId);
+            // return await _unitOfWork.Companies.GetCompanyById(companyId);
         }
 
         public async Task UpdateCompany(Company company)
         {
             await _unitOfWork.Repository<Company>().UpdateAsync(company);
-           // await _unitOfWork.Companies.UpdateCompany(company);
+            // await _unitOfWork.Companies.UpdateCompany(company);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<CompanySearchResponse> GetCompanyByCompanyId(int companyId)
+        {
+            var company = await _unitOfWork.Repository<Company>().GetByIdAsync(companyId);
+            var address = company != null ? await _unitOfWork.Repository<Xome.Cascade2.AccountService.Domain.Entities.Address>().GetByIdAsync(company.AddressId) : new Xome.Cascade2.AccountService.Domain.Entities.Address();
+            var allStates = await _unitOfWork.Repository<States>().ListAllAsync();
+
+            return new CompanySearchResponse()
+            {
+                CompanyName = company.CompanyName,
+                Abbreviation = company.Abbreviation,
+                LegalEntityName = company.LegalEntityName,
+                DisplayName = string.Empty,
+                Active = company.Status,
+                Status = company.Status ? "Active" : "InActive",
+                TaxId = company.TaxID,
+                TaxIdType = string.Empty, // will assign once master data is available
+                AddressId = company.AddressId,
+                AddressLine1 = address != null ? address.Address1 : string.Empty,
+                AddressLine2 = address != null ? address.Address2 : string.Empty,
+                City = address != null ? address.City : string.Empty,
+                State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
+                StateCd = address.State,
+                Zip = address != null ? address.Zip : string.Empty,
+                TaxIdTypeId = 0,
+            };
+        }
+
+        public async Task<List<CompanySearchResponse>> GetFilteredCompanies(CompanySearchRequest parameters)
+        {
+            var companySearchList = new List<CompanySearchResponse>();
+
+            //if (parameters.CompanyTypes.Any(ct => ct == (int)CompanyType.ASSETMANAGEMENTCO))
+            //{
+            //    var companies = await _unitOfWork.Repository<Company>().ListAllAsync();
+
+            //}
+           // var companies = await _unitOfWork.Repository<Company>().ListAllAsync();
+
+            var pagedResult =  await _unitOfWork.Repository<Company>().GetAsync(parameters.SortFilters);
+            if (pagedResult.Items.Any())
+            {
+                var result = pagedResult.Items.Where(i => i.Status == parameters.Status).ToList();
+
+                var allStates = await _unitOfWork.Repository<States>().ListAllAsync();
+
+                foreach (var company in result)
+                {
+                    var address = company != null ? await _unitOfWork.Repository<Xome.Cascade2.AccountService.Domain.Entities.Address>().GetByIdAsync(company.AddressId) : new Xome.Cascade2.AccountService.Domain.Entities.Address();
+
+                    companySearchList.Add(new CompanySearchResponse()
+                    {
+                        CompanyName = company.CompanyName,
+                        Abbreviation = company.Abbreviation,
+                        LegalEntityName = company.LegalEntityName,
+                        DisplayName = string.Empty,
+                        Active = company.Status,
+                        Status = company.Status ? "Active" : "InActive",
+                        TaxId = company.TaxID,
+                        TaxIdType = string.Empty, // will assign once master data is available
+                        AddressId = company.AddressId,
+                        AddressLine1 = address != null ? address.Address1 : string.Empty,
+                        AddressLine2 = address != null ? address.Address2 : string.Empty,
+                        City = address != null ? address.City : string.Empty,
+                        State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
+                        StateCd = address.State,
+                        Zip = address != null ? address.Zip : string.Empty,
+                        TaxIdTypeId = 0,
+                    });
+                }
+            }
+
+            return companySearchList;
         }
     }
 }

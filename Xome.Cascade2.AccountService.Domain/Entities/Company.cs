@@ -56,10 +56,21 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
 
         [Column("MODIFIED_BY")]
         public int? ModifiedBy { get; set; }
-        //public string DisplayName { get; set; }
-        [Column("ABBREVIATION")]
-        public string Abbreviation { get; set; } 
+      //  public string DisplayName { get; set; } // need confirmation from PO
+        public string Abbreviation { get; set; } // need confirmation from PO
+        //public int[] StateServed { get; set; }
+
         
+        /// below are attributes of address
+       // public string Address { get; set; }
+        //public string City { get; set; }
+        //public string State { get; set; }
+        //public string Zip { get; set; }
+        // public string Fax { get; set; }
+        //// public string PrimaryPhone { get; set; }
+        // public string Ext { get; set; }
+
+        [JsonIgnore]
         [Column("ADDRESS_ID")]
         public int AddressId { get; set; }
 

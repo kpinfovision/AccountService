@@ -12,8 +12,8 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
     public class Services
     {
         [Key]
-        [Column("SERVICES_ID")]
-        public int ServicesId {get; set;}
+        [Column("SERVICE_ID")]
+        public int ServiceId {get; set;}
         [Column("SERVICE_NAME")]
         [MaxLength(50)]
         public string ServiceName {get; set;}

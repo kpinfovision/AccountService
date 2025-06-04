@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Xome.Cascade2.AccountService.Application\Xome.Cascade2.AccountService.Application.csproj" />
     <ProjectReference Include="..\Xome.Cascade2.AccountService.Infrastructure\Xome.Cascade2.AccountService.Infrastructure.csproj" />
+    <ProjectReference Include="..\Xome.Cascade2.SharedUtilities\Xome.Cascade2.SharedUtilities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,9 +11,11 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
     [Table("ADDRESS")]
     public class Address
     {
-        [Key]
         [Column("ADDRESS_ID")]
         public int AddressId { get; set; }
+
+        //[Column("USER_ID")]
+        //public int UserId { get; set; }
 
         [Column("ADDRESS_1")]
         [StringLength(50)]

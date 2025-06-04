@@ -10,7 +10,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         [Column("STATE_ID")] 
         public int StateId { get; set; }
 
-        [Column("STATE")]
+        [Column("STATE_NAME")]
         [MaxLength(100)]
         public string StateName { get; set; }
 

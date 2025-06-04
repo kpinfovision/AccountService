@@ -1,14 +1,9 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json.Linq;
-using System.Xml;
 using Xome.Cascade2.AccountService.Application.Services;
 using Xome.Cascade2.AccountService.Domain.Entities;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
-using Xome.Cascade2.AccountService.Infrastructure.Repositories;
 
 namespace Xome.Cascade2.AccountService.WebApi.Controllers
 {
@@ -29,11 +24,11 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
             return await _companyService.GetCompanies();
         }
 
-        [HttpGet("{companyId}")]
-        public async Task<Company> GetCompanyById(int companyId)
-        {
-            return await _companyService.GetCompanyById(companyId);
-        }
+        //[HttpGet("{companyId}")]
+        //public async Task<Company> GetCompanyById(int companyId)
+        //{
+        //    return await _companyService.GetCompanyById(companyId);
+        //}
 
         [HttpPost]
         public async Task<CompanySaveRequest> AddCompany(List<CompanySaveRequest> companyRequest) // List<CompanySaveRequest> companyRequest
@@ -56,6 +51,20 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
         public async Task DeleteCompany(int id)
         {
             await _companyService.DeleteCompany(id);
+        }
+
+        [HttpPost]
+        [Route("Search")]
+        public async Task<List<CompanySearchResponse>> SearchAssetManagementCompany(CompanySearchRequest companySearchRequest)
+        {
+            return await _companyService.GetFilteredCompanies(companySearchRequest);
+        }
+
+        [HttpGet]
+        [Route("View")]
+        public async Task<CompanySearchResponse> ViewAssetManagementCompanyProfile(int companyId)
+        {
+            return await _companyService.GetCompanyByCompanyId(companyId);
         }
     }
 }
