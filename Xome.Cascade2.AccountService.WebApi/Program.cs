@@ -109,7 +109,7 @@ else if (app.Environment.IsProduction())
 
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CAMUNDA API POC");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Account");
         c.RoutePrefix = string.Empty;
     });
 }
