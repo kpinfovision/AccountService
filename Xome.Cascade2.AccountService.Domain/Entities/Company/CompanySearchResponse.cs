@@ -13,6 +13,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
 {
     public class CompanySearchResponse
     {
+        public int CompanyId { get; set; }
         public string CompanyName { get; set; }
         public string Abbreviation { get; set; }
         public string LegalEntityName { get; set; }
@@ -22,6 +23,12 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public string TaxId {  get; set; }
         public string TaxIdType { get; set; }
         public int TaxIdTypeId { get; set; }
+        public int CompanyTypeId { get; set; }
+        public string CompanyType { get; set; }
+        public bool OutSourced { get; set; }
+        public string Notes { get; set; }
+        public int RemovedReasonId { get; set; }
+        public string RemovedReason {  get; set; }
         public AddressResponse Address {  get; set; }
     }
 

@@ -26,8 +26,8 @@ namespace Xome.Cascade2.AccountService.Application.Services
             return new
             {
                 removedReasons = Array.Empty<string>(),
-                services = services,
-                companyTypes = companyTypes,
+                services = services.Any() ? services.Where(ct => ct.Active == true).ToList() : new List<Domain.Entities.Services>(),
+                companyTypes = companyTypes.Any() ? companyTypes.Where(ct => ct.Active == true).ToList(): new List<CompanyTypes>(),
                 states = states,
                 TaxIDTypes = Array.Empty<string>(),
             };
