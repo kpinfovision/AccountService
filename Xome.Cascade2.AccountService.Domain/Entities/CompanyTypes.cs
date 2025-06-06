@@ -13,5 +13,8 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         [Column("NAME")]
         [MaxLength(50)]
         public string CompanyTypeName { get; set; }
+
+        [Column("ACTIVE")]
+        public bool Active { get; set; }
     }
 }

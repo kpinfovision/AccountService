@@ -17,5 +17,8 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         [Column("SERVICE_NAME")]
         [MaxLength(50)]
         public string ServiceName {get; set;}
+
+        [Column("ACTIVE")]
+        public bool Active { get; set; }
     }
 }

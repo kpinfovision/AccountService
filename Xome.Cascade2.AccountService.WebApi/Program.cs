@@ -10,6 +10,7 @@ using Azure.Messaging.ServiceBus;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
 using Xome.Cascade2.AccountService.Infrastructure.Repositories;
 using Xome.Cascade2.AccountService.Infrastructure.UnitOfWork;
+using Xome.Cascade2.AccountService.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,6 +97,7 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated(); // Ensures OnModelCreating().HasData() is applied
 }
 
+app.UseMiddleware<ResponseMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
