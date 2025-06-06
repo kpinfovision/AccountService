@@ -21,17 +21,6 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
             _companyService = companyService;
             _entityRepository = entityRepository;
         }
-        [HttpGet]
-        public async Task<IEnumerable<Company>> GetCompanies()
-        {
-            return await _companyService.GetCompanies();
-        }
-
-        //[HttpGet("{companyId}")]
-        //public async Task<Company> GetCompanyById(int companyId)
-        //{
-        //    return await _companyService.GetCompanyById(companyId);
-        //}
 
         [HttpPost]
         public async Task<IActionResult> AddCompany(List<CompanySaveRequest> companyRequest) // List<CompanySaveRequest> companyRequest
@@ -70,17 +59,11 @@ namespace Xome.Cascade2.AccountService.WebApi.Controllers
             }           
         }
 
-        [HttpPut]
-        public async Task UpdateCompany(Company company)
-        {
-            await _companyService.UpdateCompany(company);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task DeleteCompany(int id)
-        {
-            await _companyService.DeleteCompany(id);
-        }
+        //[HttpPut]
+        //public async Task UpdateCompany(Company company)
+        //{
+        //    await _companyService.UpdateCompany(company);
+        //}
 
         [HttpPost]
         [Route("Search")]
