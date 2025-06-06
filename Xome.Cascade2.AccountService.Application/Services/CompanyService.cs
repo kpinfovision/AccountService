@@ -2,11 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Xome.Cascade2.AccountService.Domain.Entities;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
+using Xome.Cascade2.SharedUtilities.ResponseModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Address = Xome.Cascade2.AccountService.Domain.Entities.Address;
 
 namespace Xome.Cascade2.AccountService.Application.Services
 {
 
-    public class CompanyService
+    public class CompanyService : BaseService<CompanyService>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly string _connectionString;
@@ -25,20 +30,30 @@ namespace Xome.Cascade2.AccountService.Application.Services
             bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
             bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
             bool isDuplicateTaxId = await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID);
+            var validations = new List<ValidationInfo>();
+
             if (isDuplicateCompanyName)
             {
-                Console.WriteLine("Duplicate CompanyName");
+                validations.Add(new ValidationInfo($"Duplicate CompanyName", BaseStatusCodes.Common.CustomMessage, field: "CompanyName"));
+                // Console.WriteLine("Duplicate CompanyName");
+
             }
             if (isDuplicateLegalEntityName)
             {
-                Console.WriteLine("Duplicate LegalEntityName");
+                validations.Add(new ValidationInfo($"Duplicate LegalEntityName", BaseStatusCodes.Common.CustomMessage, field: "LegalEntityName"));
+                // Console.WriteLine("Duplicate LegalEntityName");
             }
             if (isDuplicateTaxId)
             {
-                Console.WriteLine("Duplicate TaxId");
+                validations.Add(new ValidationInfo($"Duplicate TaxId", BaseStatusCodes.Common.CustomMessage, field: "TaxId"));
+                // Console.WriteLine("Duplicate TaxId");
             }
             if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId)
             {
+                ResponseEnvelope = new ResponseEnvelope()
+                {
+                    ValidationCollection = validations,
+                };
                 Console.WriteLine("Return Error: 422");
             }
             else
@@ -48,16 +63,31 @@ namespace Xome.Cascade2.AccountService.Application.Services
             }
         }
 
-        public async Task BulkInsertCompanyAsync(List<CompanySaveRequest> companies, bool isFileUpload = false)
+        public async Task<List<CompanySaveResponse>> BulkInsertCompanyAsync(List<CompanySaveRequest> companies, bool isFileUpload = false)
         {
-            if (isFileUpload || companies == null || !companies.Any())
-                return;
+            var validations = new List<ValidationInfo>();
+            var validatedCompanies = new List<Company>();
 
-            var validatedAddress = new List<Xome.Cascade2.AccountService.Domain.Entities.Address>();
+            if (isFileUpload || companies == null || !companies.Any())
+            {
+                validations.Add(new ValidationInfo($"No companies to upload", BaseStatusCodes.Common.CustomMessage, field: null));
+                ResponseEnvelope = new ResponseEnvelope()
+                {
+                    ValidationCollection = validations,
+                    MessageInfoCollection = new List<MessageInfo>
+                        { new MessageInfo("Asset Management Company save failed See Validations for more details!", BaseStatusCodes.Common.CustomMessage, MessageType.ERROR) }
+
+                };
+
+                return new List<CompanySaveResponse>();
+            }
+
+
+            var validatedAddress = new List<Address>();
 
             foreach (var company in companies)
             {
-                validatedAddress.Add(new Xome.Cascade2.AccountService.Domain.Entities.Address()
+                validatedAddress.Add(new Address()
                 {
                     AddressId = 0, // company.AddressId,
                     Address1 = company.Address.AddressLine1,
@@ -82,7 +112,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
             try
             {
                 // Insert Addresses First
-                await _unitOfWork.Repository<Xome.Cascade2.AccountService.Domain.Entities.Address>().BulkAddAsync(validatedAddress);
+                await _unitOfWork.Repository<Address>().BulkAddAsync(validatedAddress);
                 await _unitOfWork.SaveChangesAsync();
 
                 // Map AddressId back to companies (assumes same order)
@@ -91,17 +121,32 @@ namespace Xome.Cascade2.AccountService.Application.Services
                     companies[i].Address.AddressId = validatedAddress[i].AddressId;
                 }
 
-                var validatedCompanies = new List<Company>();
-
                 foreach (var company in companies)
                 {
+                    if (company.CompanyName?.Length <= 0)
+                    {
+                        Console.WriteLine($"CompanyName Required");
+                    }
                     bool isDuplicateCompanyName = await _entityRepository.CheckDuplicateAsync("CompanyName", company.CompanyName);
-                    bool isDuplicateLegalEntityName = await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName);
+                    bool isDuplicateLegalEntityName = company.LegalEntityName?.Length > 0 ? await _entityRepository.CheckDuplicateAsync("LegalEntityName", company.LegalEntityName) : false;
                     bool isDuplicateTaxId = company.TaxIDType > 0 ? await _entityRepository.CheckDuplicateAsync("TaxID", company.TaxID) : false;
 
-                    if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId)
+                    if (isDuplicateCompanyName)
                     {
-                        Console.WriteLine($"Duplicate record detected: {company.CompanyName}");
+                        validations.Add(new ValidationInfo($"Duplicate record detected: {company.CompanyName}", BaseStatusCodes.Common.CustomMessage, field: "CompanyName"));
+                    }
+
+                    if (isDuplicateLegalEntityName)
+                    {
+                        validations.Add(new ValidationInfo($"Duplicate record detected: {company.LegalEntityName}", BaseStatusCodes.Common.CustomMessage, field: "LegalEntityName"));
+                    }
+
+                    if (isDuplicateTaxId)
+                    {
+                        validations.Add(new ValidationInfo($"Duplicate record detected: {company.TaxID}", BaseStatusCodes.Common.CustomMessage, field: "TaxID"));
+
+                    }
+                    if (isDuplicateCompanyName || isDuplicateLegalEntityName || isDuplicateTaxId) {
                         continue;
                     }
 
@@ -111,60 +156,49 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         CompanyName = company.CompanyName,
                         LegalEntityName = company.LegalEntityName,
                         TaxID = company.TaxID,
+                        Status = company.Status,
                         Abbreviation = company.Abbreviation,
                         AddressId = company.Address.AddressId,
                         CreatedBy = 1, // need to get it from token once implemented
                         CreatedOn = DateTime.UtcNow,
                         ModifiedBy = 1, // need to get it from token once implemented
                         ModifiedDate = DateTime.UtcNow,
-                        Status = company.Status,
-                        //Address = string.Concat(company.Address.AddressLine1, company.Address.AddressLine2, company.Address.City, company.Address.State, company.Address.Zip),
-                        //City = company.Address.City,
-                        //State = company.Address.State,
-                        //Zip = company.Address.Zip,
-                        //DisplayName = company.DisplayName,
-                        //StateServed = company.StateServed,
-
                     });
                 }
 
                 if (!validatedCompanies.Any())
                 {
-                    Console.WriteLine("No valid companies to insert.");
-                    return;
+                    validations.Add(new ValidationInfo($"No valid companies to insert.", BaseStatusCodes.Common.CustomMessage, field: null));
+                }
+
+                if (validations.Any())
+                {
+                    ResponseEnvelope = new ResponseEnvelope()
+                    {
+                        MessageInfoCollection = new List<MessageInfo>
+                        { new MessageInfo("Asset Management Company save failed See Validations for more details!", BaseStatusCodes.Common.CustomMessage, MessageType.ERROR) },
+                        ValidationCollection = validations
+                    };
+
+                    return new List<CompanySaveResponse>();
                 }
 
                 await _unitOfWork.Repository<Company>().BulkAddAsync(validatedCompanies);
                 await _unitOfWork.SaveChangesAsync();
 
-                var companyStates = new List<CompanyStatesServed>();
+                if (transaction != null)
+                    await transaction.CommitAsync();
 
-                foreach (var company in validatedCompanies)
-                {
-                    //companyStates.AddRange(company.StateServed.Select(stateId => new CompanyStatesServed
-                    //{
-                    //    CompanyId = company.CompanyId,
-                    //    StateId = stateId
-                    //}));
 
-                    //}
 
-                    if (companyStates.Any())
-                    {
-                        await _unitOfWork.Repository<CompanyStatesServed>().BulkAddAsync(companyStates.ToList());
-                        // await _unitOfWork.CompanyStatesServed.BulkInsertCompanyStatesServed(companyStates);
-                        await _unitOfWork.SaveChangesAsync();
-                    }
-
-                    if (transaction != null)
-                        await transaction.CommitAsync();
-                }
+                var result = validatedCompanies.Select(x => new CompanySaveResponse { CompanyId = x.CompanyId, CompanyName = x.CompanyName }).ToList();
+                return result;
             }
             catch (Exception ex)
             {
                 if (transaction != null)
                     await transaction.RollbackAsync();
-                Console.WriteLine($"Error during bulk insert: {ex.Message}");
+                Console.WriteLine($"Error during bulk insert: {ex.Message}");               
                 throw; // Rethrow if req.
             }
         }
@@ -205,9 +239,11 @@ namespace Xome.Cascade2.AccountService.Application.Services
             var company = await _unitOfWork.Repository<Company>().GetByIdAsync(companyId);
             var address = company != null ? await _unitOfWork.Repository<Xome.Cascade2.AccountService.Domain.Entities.Address>().GetByIdAsync(company.AddressId) : new Xome.Cascade2.AccountService.Domain.Entities.Address();
             var allStates = await _unitOfWork.Repository<States>().ListAllAsync();
+            var companyTypes = await _unitOfWork.Repository<CompanyTypes>().ListAllAsync();
 
             return new CompanySearchResponse()
             {
+                CompanyId = companyId,
                 CompanyName = company.CompanyName,
                 Abbreviation = company.Abbreviation,
                 LegalEntityName = company.LegalEntityName,
@@ -216,6 +252,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 Status = company.Status ? "Active" : "InActive",
                 TaxId = company.TaxID,
                 TaxIdType = string.Empty, // will assign once master data is available
+                CompanyTypeId = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeId : 0,
+                CompanyType = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeName ?? string.Empty : string.Empty,
+
+                Notes = company.Notes??string.Empty.Trim(),
+                OutSourced = company.IsOutsourced,
+                RemovedReasonId = 0,
+                RemovedReason = string.Empty.Trim(),
                 Address = new AddressResponse()
                 {
                     AddressId = company.AddressId,
@@ -233,13 +276,22 @@ namespace Xome.Cascade2.AccountService.Application.Services
             };
         }
 
-        public async Task<List<CompanySearchResponse>> GetFilteredCompanies(CompanySearchRequest parameters)
+        public async Task<List<CompanySearchResponse>> GetFilteredCompanies(CompanySearchRequest companySearchRequest)
         {
             var companySearchList = new List<CompanySearchResponse>();
-            var pagedResult =  await _unitOfWork.Repository<Company>().GetAsync(parameters.SortFilters, q=>q.Include(c=>c.Address));
+            if (string.IsNullOrEmpty(companySearchRequest.SortFilters.SortColumn))
+            {
+                companySearchRequest.SortFilters.SortColumn = "CreatedOn";
+                companySearchRequest.SortFilters.SortDescending = true;
+            }
+            var totalRows = 0;
+            var companyTypes = await _unitOfWork.Repository<CompanyTypes>().ListAllAsync();
+ 
+            var pagedResult = await _unitOfWork.Repository<Company>().GetAsync(companySearchRequest.SortFilters, q => q.Include(c => c.Address));
             if (pagedResult.Items.Any())
             {
-                var result = pagedResult.Items.Where(i => i.Status == parameters.Status).ToList();
+                var result = pagedResult.Items.Where(i => i.Status == companySearchRequest.Status).ToList();
+                totalRows = pagedResult.Items.Any() ? pagedResult.TotalCount : 0;
 
                 var allStates = await _unitOfWork.Repository<States>().ListAllAsync();
 
@@ -249,6 +301,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
                     companySearchList.Add(new CompanySearchResponse()
                     {
+                        CompanyId = company.CompanyId,
                         CompanyName = company.CompanyName,
                         Abbreviation = company.Abbreviation,
                         LegalEntityName = company.LegalEntityName,
@@ -257,6 +310,12 @@ namespace Xome.Cascade2.AccountService.Application.Services
                         Status = company.Status ? "Active" : "InActive",
                         TaxId = company.TaxID,
                         TaxIdType = string.Empty, // will assign once master data is available
+                        CompanyTypeId = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeId : 0,
+                        CompanyType = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeName??string.Empty : string.Empty,
+                        Notes = company.Notes??string.Empty.Trim(),
+                        OutSourced = company.IsOutsourced,
+                        RemovedReasonId = 0,
+                        RemovedReason = string.Empty.Trim(),
                         Address = new AddressResponse()
                         {
                             AddressId = company.AddressId,
@@ -274,6 +333,8 @@ namespace Xome.Cascade2.AccountService.Application.Services
                     });
                 }
             }
+
+            this.PaginationEnvelope = new Pagination(companySearchRequest.SortFilters.PageNumber, companySearchRequest.SortFilters.PageSize, totalRows);
 
             return companySearchList;
         }

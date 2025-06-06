@@ -86,7 +86,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
             {
                 foreach (var filter in parameters.Filters)
                 {
-                    string key = filter.Key;   // e.g., "Category.Name"
+                    string key = filter.Key;
                     string value = filter.Value;
 
                     if (!string.IsNullOrEmpty(value))
@@ -99,7 +99,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
             // Sorting
             if (!string.IsNullOrWhiteSpace(parameters.SortColumn))
             {
-                var sortOrder = parameters.SortDescending ? "descending" : "ascending";
+                var sortOrder = parameters.SortDescending??false ? "descending" : "ascending";
                 var orderExpression = $"{parameters.SortColumn} {sortOrder}";
                 query = query.OrderBy(orderExpression);
             }
@@ -111,7 +111,7 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
                 .Take(parameters.PageSize)
                 .ToListAsync();
 
-            return new Xome.Cascade2.AccountService.Domain.Entities.PagedResult<T> { Items = items, TotalCount = totalCount };
+            return new Domain.Entities.PagedResult<T> { Items = items, TotalCount = totalCount };
         }
     }
 }
