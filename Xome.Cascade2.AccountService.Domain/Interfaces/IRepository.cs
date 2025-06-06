@@ -16,6 +16,7 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+        Task DeleteAsync(int id);
         Task<bool> ExistsAsync(Guid id);
         Task BulkAddAsync(List<T> entities);
 

@@ -13,5 +13,6 @@ namespace Xome.Cascade2.AccountService.Domain.Interfaces
         Task<IEnumerable<Services>> GetServicesAsync();
         Task<IEnumerable<CompanyTypes>> GetCompaniesTypes();
         Task<IEnumerable<States>> GetAllStates();
+        Task<IEnumerable<TaxIDTypes>> GetAllTaxTypes();
     }
 }

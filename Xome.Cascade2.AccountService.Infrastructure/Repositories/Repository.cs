@@ -60,7 +60,15 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
             _dbContext.Set<T>().Remove(entity);
             await _dbContext.SaveChangesAsync();
         }
-
+        public async Task DeleteAsync(int Id)
+        {
+            var delEntity = await _dbContext.Set<T>().FindAsync(Id);
+            if (delEntity != null)
+            {
+                _dbContext.Set<T>().Remove(delEntity);
+            }
+            await _dbContext.SaveChangesAsync();
+        }
         public async Task<bool> ExistsAsync(Guid id)
         {
             var entity = await GetByIdAsync(id);

@@ -19,17 +19,18 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
         public async Task<dynamic> GetLookupData()
         {
-           // var removedReasons = await this.GetRemovedReasonAsync();
+            var removedReasons = Array.Empty<string>(); // await this.GetRemovedReasonAsync();
             var services = await this.GetServicesAsync();
             var companyTypes = await this.GetCompaniesTypes();
             var states = await this.GetAllStates();
+            var taxTypes = await this.GetAllTaxIDTypes();
             return new
             {
-                removedReasons = Array.Empty<string>(),
+                removedReasons = removedReasons,
                 services = services,
                 companyTypes = companyTypes,
                 states = states,
-                TaxIDTypes = Array.Empty<string>(),
+                TaxIDTypes = taxTypes,
             };
         }
 
@@ -51,6 +52,10 @@ namespace Xome.Cascade2.AccountService.Application.Services
         public async Task<IEnumerable<States>> GetAllStates()
         {
             return await _unitOfWork.Lookup.GetAllStates();
+        }
+        public async Task<IEnumerable<TaxIDTypes>> GetAllTaxIDTypes()
+        {
+            return await _unitOfWork.Lookup.GetAllTaxTypes();
         }
     }
 }
