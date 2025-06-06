@@ -20,12 +20,13 @@ namespace Xome.Cascade2.AccountService.Application.Services
 
         public async Task<IEnumerable<Feature>> GetFeatures()
         {
-            return await _unitOfWork.Features.GetAllFeatures();
+            // return await _unitOfWork.Features.GetAllFeatures();
+            return await _unitOfWork.Repository<Feature>().ListAllAsync();
         }
 
         public async Task<Feature> GetFeatureByUserId(int userId)
         {
-            return await _unitOfWork.Features.GetFeatureByUserId(userId);
+            return await _unitOfWork.Repository<Feature>().GetByIdAsync(userId);
         }
     }
 }

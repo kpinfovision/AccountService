@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
+using Xome.Cascade2.AccountService.Domain.Entities;
 using Xome.Cascade2.AccountService.Domain.Interfaces;
 using Xome.Cascade2.AccountService.Infrastructure.Data;
 using Xome.Cascade2.AccountService.Infrastructure.Repositories;
@@ -9,47 +10,47 @@ namespace Xome.Cascade2.AccountService.Infrastructure.UnitOfWork
     {
         private readonly AppDbContext _context;
         private readonly Dictionary<string, object> _repositories = new();
-
-        public IUserRepository Users { get; }
-        public IAssetRepository Assets { get; }
-        public ICompanyRepository Companies { get; }
-        public ICompanyStatesServedRepository CompanyStatesServed { get; }
-        public IFeatureRepository Features { get; }
-        public ITaxIDTypesRepository TaxIDTypes { get; }
-        public IAddressRepository Address { get; }
-        public IValuationTypeRepository valuationTypes { get; }
-        public ILoadValuationRepository LoadValuations { get; }
-        public ISellerConfigRepository SellerConfig { get; }
         public ILookupRepository Lookup { get; }
+
+        //public ITaxIDTypesRepository TaxIDTypes { get; }
+        //public IUserRepository Users { get; }
+        //public IAssetRepository Assets { get; }
+        //public ICompanyRepository Companies { get; }
+        //public ICompanyStatesServedRepository CompanyStatesServed { get; }
+        // public IFeatureRepository Features { get; }
+        // public IAddressRepository Address { get; }
+        //public IValuationTypeRepository valuationTypes { get; }
+        //public ILoadValuationRepository LoadValuations { get; }
+        //public ISellerConfigRepository SellerConfig { get; }
 
 
         public UnitOfWork(
             AppDbContext context,
-            IUserRepository userRepository,
-            IAssetRepository assetRepository,
-            ILoadValuationRepository loadValuationRepository,
-            IValuationTypeRepository valuationTypesRepository,
-            ISellerConfigRepository sellerConfigRepository,
-            ICompanyRepository companyRepository,
-            IFeatureRepository featureRepository,
-            ILookupRepository lookup,
-            ICompanyStatesServedRepository companyStatesServedRepository,
-            ITaxIDTypesRepository taxIDTypesRepository,
-            IAddressRepository addressRepository
+            ILookupRepository lookup
+            // ITaxIDTypesRepository taxIDTypesRepository
+            // IAddressRepository addressRepository
+            // ICompanyStatesServedRepository companyStatesServedRepository,
+            //ICompanyRepository companyRepository,
+            //IUserRepository userRepository,
+            //IAssetRepository assetRepository,
+            //ILoadValuationRepository loadValuationRepository,
+            //IValuationTypeRepository valuationTypesRepository,
+            //ISellerConfigRepository sellerConfigRepository,
+            // IFeatureRepository featureRepository,
             )
         {
             _context = context;
-            Users = userRepository;
-            Assets = assetRepository;
-            valuationTypes = valuationTypesRepository;
-            LoadValuations = loadValuationRepository;
-            SellerConfig = sellerConfigRepository;
-            Companies = companyRepository;
-            Features = featureRepository;
             Lookup = lookup;
-            CompanyStatesServed = companyStatesServedRepository;
-            TaxIDTypes = taxIDTypesRepository;
-            Address = addressRepository;
+            // TaxIDTypes = taxIDTypesRepository;
+            // Address = addressRepository;
+            //CompanyStatesServed = companyStatesServedRepository;
+            //Companies = companyRepository;
+            //Users = userRepository;
+            //Assets = assetRepository;
+            //valuationTypes = valuationTypesRepository;
+            //LoadValuations = loadValuationRepository;
+            //SellerConfig = sellerConfigRepository;
+            // Features = featureRepository;
         }
 
         public IRepository<T> Repository<T>() where T : class

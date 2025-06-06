@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Repositories\AddressRepository.cs" />
+    <Compile Remove="Repositories\AssetRepository.cs" />
+    <Compile Remove="Repositories\CompanyRepository.cs" />
+    <Compile Remove="Repositories\FeatureRepository.cs" />
+    <Compile Remove="Repositories\LoadValuationRepository.cs" />
+    <Compile Remove="Repositories\SellerConfigRepository.cs" />
+    <Compile Remove="Repositories\TaxIDTypesRepository.cs" />
+    <Compile Remove="Repositories\UserRepository.cs" />
+    <Compile Remove="Repositories\ValuationTypeRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EFCore.BulkExtensions" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.5" />

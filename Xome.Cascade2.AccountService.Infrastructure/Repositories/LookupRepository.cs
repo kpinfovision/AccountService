@@ -38,5 +38,10 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
         {
             return await _context.States.ToArrayAsync();
         }
+        public async Task<IEnumerable<TaxIDTypes>> GetAllTaxTypes()
+        {
+            return await _context.TaxIDTypes.ToArrayAsync();
+        }
+
     }
 }

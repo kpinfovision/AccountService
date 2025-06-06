@@ -11,16 +11,6 @@ namespace Xome.Cascade2.AccountService.WebApi.Config
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterLazy<IUserRepository, UserRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<IAssetRepository, AssetRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<ICompanyRepository, CompanyRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<ICompanyStatesServedRepository, CompanyStatesServedRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<IFeatureRepository, FeatureRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<ITaxIDTypesRepository, TaxIDTypesRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<IAddressRepository, AddressRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<IValuationTypeRepository, ValuationTypeRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<ILoadValuationRepository, LoadValuationRepository>().InstancePerLifetimeScope();
-            builder.RegisterLazy<ISellerConfigRepository, SellerConfigRepository>().InstancePerLifetimeScope();
             builder.RegisterGenericLazy(typeof(IRepository<>), typeof(Repository<>));
             builder.RegisterLazy<IUnitOfWork, UnitOfWork>().InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(EntityRepository<>))
@@ -29,6 +19,17 @@ namespace Xome.Cascade2.AccountService.WebApi.Config
             builder.RegisterGeneric(typeof(Repository<>))
                                .As(typeof(IRepository<>))
                                .InstancePerLifetimeScope();
+            // builder.RegisterLazy<ITaxIDTypesRepository, TaxIDTypesRepository>().InstancePerLifetimeScope();
+            //builder.RegisterLazy<IUserRepository, UserRepository>().InstancePerLifetimeScope();
+            //builder.RegisterLazy<IAssetRepository, AssetRepository>().InstancePerLifetimeScope();
+            //builder.RegisterLazy<ICompanyRepository, CompanyRepository>().InstancePerLifetimeScope();
+            //builder.RegisterLazy<ICompanyStatesServedRepository, CompanyStatesServedRepository>().InstancePerLifetimeScope();
+            // builder.RegisterLazy<IFeatureRepository, FeatureRepository>().InstancePerLifetimeScope();
+            // builder.RegisterLazy<IAddressRepository, AddressRepository>().InstancePerLifetimeScope();
+            //builder.RegisterLazy<IValuationTypeRepository, ValuationTypeRepository>().InstancePerLifetimeScope();
+            //builder.RegisterLazy<ILoadValuationRepository, LoadValuationRepository>().InstancePerLifetimeScope();
+            //builder.RegisterLazy<ISellerConfigRepository, SellerConfigRepository>().InstancePerLifetimeScope();
+
             base.Load(builder);
         }
     }

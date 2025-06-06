@@ -7,6 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\AssetService.cs" />
+    <Compile Remove="Services\CamundaService.cs" />
+    <Compile Remove="Services\IAddressService.cs" />
+    <Compile Remove="Services\IAssetService.cs" />
+    <Compile Remove="Services\ICompanyService.cs" />
+    <Compile Remove="Services\IFeatureService.cs" />
+    <Compile Remove="Services\ILoadValuationService.cs" />
+    <Compile Remove="Services\ILookupService.cs" />
+    <Compile Remove="Services\ISellerConfigService.cs" />
+    <Compile Remove="Services\ITaxIDTypesService.cs" />
+    <Compile Remove="Services\IUserService.cs" />
+    <Compile Remove="Services\IValuationTypeService.cs" />
+    <Compile Remove="Services\LoadValuationService.cs" />
+    <Compile Remove="Services\SellerConfigService.cs" />
+    <Compile Remove="Services\TaxIDTypesService.cs" />
+    <Compile Remove="Services\UserService.cs" />
+    <Compile Remove="Services\ValuationTypeService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DTOs\" />
   </ItemGroup>
 

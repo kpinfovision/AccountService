@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\AssetController.cs" />
+    <Compile Remove="Controllers\CamundaController.cs" />
+    <Compile Remove="Controllers\LoadValuationsController.cs" />
+    <Compile Remove="Controllers\SellerConfigController.cs" />
+    <Compile Remove="Controllers\TaxIDTypesController.cs" />
+    <Compile Remove="Controllers\UserController.cs" />
+    <Compile Remove="Controllers\ValuationTypeController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.19.0" />
     <PackageReference Include="LazyProxy.Autofac" Version="2.2.0" />

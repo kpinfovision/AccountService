@@ -26,21 +26,22 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 builder.Services.Configure<ServiceBusSettings>(
     builder.Configuration.GetSection("AzureServiceBus"));
 
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<CamundaService>();
-builder.Services.AddScoped<AssetService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<FeatureService>();
-builder.Services.AddScoped<TaxIDTypesService>();
 builder.Services.AddScoped<AddressService>();
-builder.Services.AddScoped<ValuationTypeService>();
-builder.Services.AddScoped<LoadValuationService>();
-builder.Services.AddScoped<SellerConfigService>();
 builder.Services.AddScoped<LookupService>();
 builder.Services.AddScoped<ServiceBusPublisher>();
 builder.Services.AddScoped<ILookupRepository, LookupRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+// builder.Services.AddScoped<TaxIDTypesService>();
+//builder.Services.AddScoped<ValuationTypeService>();
+//builder.Services.AddScoped<LoadValuationService>();
+//builder.Services.AddScoped<SellerConfigService>();
+//builder.Services.AddScoped<UserService>();
+//builder.Services.AddScoped<CamundaService>();
+//builder.Services.AddScoped<AssetService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -49,8 +50,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Host.UseSerilog((context, config) =>
     config.ReadFrom.Configuration(context.Configuration));
-
-
 
 //builder.Services.AddCors(options =>
 //{
