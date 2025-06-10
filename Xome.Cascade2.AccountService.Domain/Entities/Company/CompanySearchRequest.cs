@@ -12,7 +12,7 @@ namespace Xome.Cascade2.AccountService.Domain.Entities
         public List<int> CompanyTypes { get; set; }
         public List<int> Services { get; set; }
         public List<int> StatesServed { get; set; }
-        public bool Status { get; set; }
+        public bool? Status { get; set; }
         public PagedRequest SortFilters { get; set; }
     }
 }

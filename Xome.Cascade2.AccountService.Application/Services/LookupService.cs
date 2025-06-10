@@ -24,6 +24,7 @@ namespace Xome.Cascade2.AccountService.Application.Services
             var companyTypes = await this.GetCompaniesTypes();
             var states = await this.GetAllStates();
             var taxTypes = await this.GetAllTaxIDTypes();
+            
             return new
             {
                 services = services.Any() ? services.Where(ct => ct.Active == true).ToList() : new List<Domain.Entities.Services>(),

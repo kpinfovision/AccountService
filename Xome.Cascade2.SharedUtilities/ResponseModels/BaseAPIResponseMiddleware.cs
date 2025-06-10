@@ -252,9 +252,7 @@ namespace Xome.Cascade2.SharedUtilities.ResponseModels
         {
             List<string> source = new List<string>
         {
-            "/swagger", "/api/FileStorage/Download", "/api/ClaimsExport/Export", "/api/ClaimsExport/ExportToCsv", "/api/CashCollection/CashCollectionReport", "/api/EditCheck/EditCheckExcelReport", "/api/MealCount/MealCountBySiteExcelReport", "/api/MenuItems/MenuItemDailySummaryExcelReport", "/api/MenuItems/MenuItemSummaryExcelReport", "/api/PatronParticipation/PartonDetailExcelReport",
-            "/api/PatronParticipation/PartonSummaryExcelReport", "/api/PatronParticipation/PartonNonReport", "/api/Payments/PaymentDetailExcelReport", "/api/Payments/PaymentSummaryExcelReport", "/api/RevenueReport/RevenueExcelReport", "/api/Application/ApplicationCountExcel", "/api/Application/EligibilitySummaryExcel", "/api/Application/DCSummaryExcel", "/api/IncomeSurvey/EcoDisadvantagedReportExcel", "/api/IncomeSurvey/IncomeSurveyReportExcel",
-            "/api/MealCount/MealCountByEligibilityExcelReport", "/api/EditCheck/EditCheckWorkSheetExcelReport", "/api/ActivityReport/ActivityExcelReport", "/api/ExcelDownloads", "/api/Deposit/ExportToExcel", "/api/DataQuery/DownloadAsync", "/api/Import/DownloadImportException"
+            "/swagger", 
         };
             if (!context.Request.Headers.Keys.Any((string x) => x.Trim().ToLower().Equals("skipresponsemiddleware")))
             {
