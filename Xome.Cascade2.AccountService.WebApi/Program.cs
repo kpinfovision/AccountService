@@ -80,12 +80,12 @@ builder.Host.UseSerilog((context, config) =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
- {
-     policy
-         .AllowAnyOrigin()       // Allow all domains
-         .AllowAnyHeader()       // Allow all headers
-         .AllowAnyMethod();      // Allow all HTTP methods
- });
+    {
+        policy
+            .AllowAnyOrigin()       // Allow all domains
+            .AllowAnyHeader()       // Allow all headers
+            .AllowAnyMethod();      // Allow all HTTP methods
+    });
 });
 
 var app = builder.Build();
@@ -97,8 +97,6 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated(); // Ensures OnModelCreating().HasData() is applied
 }
 
-app.UseMiddleware<ResponseMiddleware>();
-app.UseMiddleware<RequestLoggingMiddleware>();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 if (app.Environment.IsDevelopment())
@@ -111,9 +109,12 @@ else if (app.Environment.IsProduction())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Account");
-        c.RoutePrefix = string.Empty;
+        c.RoutePrefix = "swagger"; // default
     });
 }
+
+app.UseMiddleware<ResponseMiddleware>();
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseHttpsRedirection();
 

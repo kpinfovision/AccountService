@@ -97,9 +97,13 @@ namespace Xome.Cascade2.AccountService.Infrastructure.Repositories
                     string key = filter.Key;
                     string value = filter.Value;
 
-                    if (!string.IsNullOrEmpty(value))
+                    if (!string.IsNullOrEmpty(value) && !bool.TryParse(value,out bool nonBoolRes))
                     {
                         query = query.Where($"{key}.Contains(@0)", value);
+                    }
+                    else if (!string.IsNullOrEmpty(value) && bool.TryParse(value, out bool boolRes))
+                    {
+                        query = query.Where($"{key} = @0", value);
                     }
                 }
             }

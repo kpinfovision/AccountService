@@ -284,59 +284,74 @@ namespace Xome.Cascade2.AccountService.Application.Services
                 companySearchRequest.SortFilters.SortColumn = "CreatedOn";
                 companySearchRequest.SortFilters.SortDescending = true;
             }
+
+            if(companySearchRequest.Status != null)
+            {
+                companySearchRequest.SortFilters.Filters.Add("Status", companySearchRequest.Status.ToString());
+            }
+           
+
             var totalRows = 0;
             var companyTypes = await _unitOfWork.Repository<CompanyTypes>().ListAllAsync();
- 
-            var pagedResult = await _unitOfWork.Repository<Company>().GetAsync(companySearchRequest.SortFilters, q => q.Include(c => c.Address));
-            if (pagedResult.Items.Any())
+            try
             {
-                var result = pagedResult.Items.Where(i => i.Status == companySearchRequest.Status).ToList();
-                totalRows = pagedResult.Items.Any() ? pagedResult.TotalCount : 0;
 
-                var allStates = await _unitOfWork.Repository<States>().ListAllAsync();
-
-                foreach (var company in result)
+                var pagedResult = await _unitOfWork.Repository<Company>().GetAsync(companySearchRequest.SortFilters, q => q.Include(c => c.Address));
+                if (pagedResult.Items.Any())
                 {
-                    var address = company != null ? await _unitOfWork.Repository<Xome.Cascade2.AccountService.Domain.Entities.Address>().GetByIdAsync(company.AddressId) : new Xome.Cascade2.AccountService.Domain.Entities.Address();
+                    //var result = pagedResult.Items.Where(i => i.Status == companySearchRequest.Status).ToList();
+                    var result = pagedResult.Items.ToList();
+                    totalRows = pagedResult.TotalCount;
 
-                    companySearchList.Add(new CompanySearchResponse()
+                    var allStates = await _unitOfWork.Repository<States>().ListAllAsync();
+
+                    foreach (var company in result)
                     {
-                        CompanyId = company.CompanyId,
-                        CompanyName = company.CompanyName,
-                        Abbreviation = company.Abbreviation,
-                        LegalEntityName = company.LegalEntityName,
-                        DisplayName = string.Empty,
-                        Active = company.Status,
-                        Status = company.Status ? "Active" : "InActive",
-                        TaxId = company.TaxID,
-                        TaxIdType = string.Empty, // will assign once master data is available
-                        CompanyTypeId = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeId : 0,
-                        CompanyType = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeName??string.Empty : string.Empty,
-                        Notes = company.Notes??string.Empty.Trim(),
-                        OutSourced = company.IsOutsourced,
-                        RemovedReasonId = 0,
-                        RemovedReason = string.Empty.Trim(),
-                        Address = new AddressResponse()
+                        var address = company != null ? await _unitOfWork.Repository<Xome.Cascade2.AccountService.Domain.Entities.Address>().GetByIdAsync(company.AddressId) : new Xome.Cascade2.AccountService.Domain.Entities.Address();
+
+                        companySearchList.Add(new CompanySearchResponse()
                         {
-                            AddressId = company.AddressId,
-                            AddressLine1 = address != null ? address.Address1 : string.Empty,
-                            AddressLine2 = address != null ? address.Address2 : string.Empty,
-                            City = address != null ? address.City : string.Empty,
-                            State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
-                            StateCd = address != null ? address.State : string.Empty,
-                            Zip = address != null ? address.Zip : string.Empty,
-                            Phone = address != null ? address.Phone : string.Empty,
-                            Fax = address != null ? address.Fax : string.Empty,
-                            Ext = address != null ? address.Ext : string.Empty,
-                        },
-                        TaxIdTypeId = 0,
-                    });
+                            CompanyId = company.CompanyId,
+                            CompanyName = company.CompanyName,
+                            Abbreviation = company.Abbreviation,
+                            LegalEntityName = company.LegalEntityName,
+                            DisplayName = string.Empty,
+                            Active = company.Status,
+                            Status = company.Status ? "Active" : "InActive",
+                            TaxId = company.TaxID,
+                            TaxIdType = string.Empty, // will assign once master data is available
+                            CompanyTypeId = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeId : 0,
+                            CompanyType = companyTypes.Any() ? companyTypes.FirstOrDefault(ct => ct.Active == true && ct.CompanyTypeId == 1).CompanyTypeName ?? string.Empty : string.Empty,
+                            Notes = company.Notes ?? string.Empty.Trim(),
+                            OutSourced = company.IsOutsourced,
+                            RemovedReasonId = 0,
+                            RemovedReason = string.Empty.Trim(),
+                            Address = new AddressResponse()
+                            {
+                                AddressId = company.AddressId,
+                                AddressLine1 = address != null ? address.Address1 : string.Empty,
+                                AddressLine2 = address != null ? address.Address2 : string.Empty,
+                                City = address != null ? address.City : string.Empty,
+                                State = allStates.FirstOrDefault(s => s.StateCode.ToLower() == address.State.ToLower())?.StateName,
+                                StateCd = address != null ? address.State : string.Empty,
+                                Zip = address != null ? address.Zip : string.Empty,
+                                Phone = address != null ? address.Phone : string.Empty,
+                                Fax = address != null ? address.Fax : string.Empty,
+                                Ext = address != null ? address.Ext : string.Empty,
+                            },
+                            TaxIdTypeId = 0,
+                        });
+                    }
                 }
+
+                this.PaginationEnvelope = new Pagination(companySearchRequest.SortFilters.PageNumber, companySearchRequest.SortFilters.PageSize, totalRows);
+
+                return companySearchList;
+            }
+            catch (Exception ex) { 
+            throw ex;
             }
 
-            this.PaginationEnvelope = new Pagination(companySearchRequest.SortFilters.PageNumber, companySearchRequest.SortFilters.PageSize, totalRows);
-
-            return companySearchList;
         }
     }
 }
